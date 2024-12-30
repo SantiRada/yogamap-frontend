@@ -40,6 +40,7 @@ import { Horarios } from './components/Edit/Horarios';
 import { Fotos } from './components/Edit/Fotos';
 import { Precios } from './components/Edit/Precios';
 import { Ubicacion } from './components/Edit/Ubicacion';
+import useColors from './Colors';
 
 import { Start } from './components/Login/Start';
 import { Login } from './components/Login/Login';
@@ -57,6 +58,10 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function TabGroup(){
+
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors);
+
     return(
         <Tab.Navigator
             screenOptions={({route}) => ({
@@ -68,10 +73,10 @@ function TabGroup(){
                     else if(route.name == "Chat"){ iconName = "chat"; }
                     else if(route.name == "Perfil"){ iconName = "person"; }
 
-                    return (<MaterialIcons name={iconName} color={focused ? '#E3D8FF' : '#E3D8FF65'} size={24} />);
+                    return (<MaterialIcons name={iconName} color={focused ? Colors.text : Colors.ligthText} size={30} />);
                 },
-                tabBarLabel: () => (
-                    <Text style={{ color:'#E3D8FF', fontSize: 12, }}>
+                tabBarLabel: ({focused}) => (
+                    <Text style={{ color:focused?Colors.text: Colors.ligthText, fontSize: 12, }}>
                         {route.name}
                     </Text>
                 ),
@@ -79,10 +84,10 @@ function TabGroup(){
                     height: 70,
                     paddingBottom: 10,
                     paddingTop: 10,
-                    backgroundColor: '#3C2C61',
+                    backgroundColor: Colors.navBar,
                 },
-                headerStyle: { backgroundColor: '#1A122E' },
-                headerTitleStyle:{ color: '#E3D8FF' },
+                headerStyle: { backgroundColor: Colors.background },
+                headerTitleStyle:{ color: Colors.text },
             })}
         >
             <Tab.Screen name="Inicio" component={Home} />
@@ -95,8 +100,14 @@ function TabGroup(){
 }
 
 function StackGroup(){
+
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors);
+
     return(
-        <Stack.Navigator>
+        <Stack.Navigator
+            initialRouteName={"Start"}
+            >
             <Stack.Screen
                 name="Start"
                 component={Start}
@@ -194,8 +205,8 @@ function StackGroup(){
                 name="Configuración"
                 component={Configuration}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -213,8 +224,8 @@ function StackGroup(){
                 name="Notificaciones"
                 component={Notifications}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_left',
@@ -232,8 +243,8 @@ function StackGroup(){
                 name="ShowEvent"
                 component={ShowEvent}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -251,8 +262,8 @@ function StackGroup(){
                 name="ShowProf"
                 component={ShowProf}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -270,8 +281,8 @@ function StackGroup(){
                 name="ShowTypeOfYoga"
                 component={ShowTypeOfYoga}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     animation: 'slide_from_right',
                     headerLeft: () => (
@@ -288,8 +299,8 @@ function StackGroup(){
                 name="ShowNotification"
                 component={ShowNotification}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     animation: 'slide_from_right',
                     headerLeft: () => (
@@ -306,8 +317,8 @@ function StackGroup(){
                 name="ShowCommunity"
                 component={ShowCommunity}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     headerLeft: () => (
                         <MaterialIcons 
                             name="arrow-back" 
@@ -322,8 +333,8 @@ function StackGroup(){
                 name="DetailsCommunity"
                 component={DetailsCommunity}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -341,8 +352,8 @@ function StackGroup(){
                 name="Cuenta"
                 component={Cuenta}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -360,8 +371,8 @@ function StackGroup(){
                 name="Editar Perfil Público"
                 component={EditPublicProfile}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -379,8 +390,8 @@ function StackGroup(){
                 name="NotificacionesConfig"
                 component={Notificaciones}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -398,8 +409,8 @@ function StackGroup(){
                 name="Ayuda"
                 component={Ayuda}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -417,8 +428,8 @@ function StackGroup(){
                 name="EditProf"
                 component={EditProf}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -437,8 +448,8 @@ function StackGroup(){
                 component={DatosPersonales}
                 options={({ navigation }) => ({
                     title: 'Datos Personales',
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -457,8 +468,8 @@ function StackGroup(){
                 component={InfoApp}
                 options={({ navigation }) => ({
                     title: 'Info. de la Aplicación',
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -476,8 +487,8 @@ function StackGroup(){
                 name="Horarios"
                 component={Horarios}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -495,8 +506,8 @@ function StackGroup(){
                 name="Fotos"
                 component={Fotos}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -514,8 +525,8 @@ function StackGroup(){
                 name="Precios"
                 component={Precios}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -534,8 +545,8 @@ function StackGroup(){
                 component={Ubicacion}
                 options={({ navigation }) => ({
                     title: "Ubicación",
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -553,8 +564,8 @@ function StackGroup(){
                 name="EditEvent"
                 component={EditEvent}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -572,8 +583,8 @@ function StackGroup(){
                 name="EditTypeOfYoga"
                 component={EditTypeOfYoga}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     animation: 'slide_from_right',
                     headerLeft: () => (
@@ -590,8 +601,8 @@ function StackGroup(){
                 name="EditCommunity"
                 component={EditCommunity}
                 options={({ navigation }) => ({
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     lazy: false,
                     animation: 'slide_from_right',
@@ -610,8 +621,8 @@ function StackGroup(){
                 component={WayClass}
                 options={({ navigation }) => ({
                     title: 'Contactar',
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     animation: 'slide_from_right',
                     headerLeft: () => (
@@ -629,8 +640,8 @@ function StackGroup(){
                 component={CreateEvent}
                 options={({ navigation }) => ({
                     title: 'Creando Evento',
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     animation: 'slide_from_right',
                     headerLeft: () => (
@@ -648,8 +659,8 @@ function StackGroup(){
                 component={CreateFormacion}
                 options={({ navigation }) => ({
                     title: 'Creando Formación',
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     animation: 'slide_from_right',
                     headerLeft: () => (
@@ -667,8 +678,8 @@ function StackGroup(){
                 component={ShowFormacion}
                 options={({ navigation }) => ({
                     title: 'Formaciones',
-                    headerStyle: { backgroundColor: '#1A122E' },
-                    headerTitleStyle:{ color: '#E3D8FF' },
+                    headerStyle: { backgroundColor: Colors.background },
+                    headerTitleStyle:{ color: Colors.text2 },
                     animationEnabled: true,
                     animation: 'slide_from_right',
                     headerLeft: () => (
@@ -694,9 +705,9 @@ export default function Navigation(){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     iconLeft: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginRight: 8,
     } 
 });

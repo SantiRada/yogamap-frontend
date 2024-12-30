@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, View, Pressable, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import useColors from '../Colors';
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import axios from 'axios';
@@ -9,11 +10,12 @@ export function TypesOfYoga(){
 
     const [data, setData] = useState([]);
 
+    
     const count = 10;
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/TypesOfYoga.php', { count }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/TypesOfYoga.php', { count }, { headers: { 'Content-Type': 'application/json' } });
             
                 if (response.data.success) {
                     if(response.data.types) { setData(response.data.types); }
@@ -29,14 +31,17 @@ export function TypesOfYoga(){
 
     const navigation = useNavigation();
 
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
+
     return(
         <>
-            <Text style={{color:'#fff',fontSize:18,fontWeight:'bold',paddingTop:8,}}>Tipos de Yoga</Text>
+            <Text style={{color:Colors.text,fontSize:18,fontWeight:'bold',paddingTop:8,}}>Tipos de Yoga</Text>
             <View style={styles.container}>
                 { data && 
                     data.map((item, index) => (
                         <Pressable key={index} style={styles.option} onPress={ () => { navigation.navigate('ShowTypeOfYoga', { id: item.id }) }}>
-                            <MaterialIcons name="help" size={24} color='#fff' />
+                            <MaterialIcons name="help" size={24} color={Colors.headerIcons} />
                             <Text style={styles.text}>{item.name}</Text>
                         </Pressable>
                     ))
@@ -46,7 +51,7 @@ export function TypesOfYoga(){
     );
 }
 
-const styles = StyleSheet.create({  
+const DynamicStyles = (Colors) => StyleSheet.create({ 
     container: {
         width: '100%',
         flexDirection: 'row',
@@ -57,15 +62,15 @@ const styles = StyleSheet.create({
         width: '48%',
         maxWidth: '49%',
         flexGrow: 1,
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.homeCards,
         padding: 16,
         borderRadius: 8,
         flexDirection: 'row',
         gap: 8,
     },
-    icon: { color: '#8C5BFF' },
+    icon: { color: Colors.headerIcons },
     text: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 16,
         fontWeight: 'bold'
     }

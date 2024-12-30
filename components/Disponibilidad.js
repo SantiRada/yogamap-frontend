@@ -1,6 +1,10 @@
 import { StyleSheet, View, Pressable, Text } from 'react-native';
+import useColors from '../Colors';
 
 export function Disponibilidad(){
+
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
 
     return(
         <View style={styles.container}>
@@ -11,9 +15,9 @@ export function Disponibilidad(){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         flex: 1,
     },
 

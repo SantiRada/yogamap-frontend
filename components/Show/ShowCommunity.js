@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { GiftedChat } from 'react-native-gifted-chat';
-import { StatusBar, View, StyleSheet, Text, TextInput, TouchableOpacity, Image, Pressable, Alert, ActivityIndicator, Modal, ToastAndroid } from 'react-native';
+import { StatusBar, View, StyleSheet, Text, TextInput, TouchableOpacity, Image, Pressable, Alert, ActivityIndicator, Modal, ToastAndroid, ScrollView } from 'react-native';
 import axios from 'axios';
+import useColors from '../../Colors';
 
 import * as Clipboard from 'expo-clipboard';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -41,7 +42,7 @@ export function ShowCommunity({ route }) {
   useEffect(() => {
     const connection = async () => {
       try{
-        const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/chat.php', { id, }, { headers: { 'Content-Type': 'application/json' } });
+        const response = await axios.post('https://yogamap.com.ar/public/select/unique/chat.php', { id, }, { headers: { 'Content-Type': 'application/json' } });
 
         if (response.data.success) {
           if(response.data.chat){ setData(response.data.chat); }
@@ -79,7 +80,7 @@ export function ShowCommunity({ route }) {
   useEffect(() => {
     const connection = async () => {
       try{
-        const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/messages.php', { id, }, { headers: { 'Content-Type': 'application/json' } });
+        const response = await axios.post('https://yogamap.com.ar/public/select/messages.php', { id, }, { headers: { 'Content-Type': 'application/json' } });
   
         if (response.data.success) {
           if(response.data.conversation) {
@@ -93,7 +94,10 @@ export function ShowCommunity({ route }) {
     connection();
   }, [id]);  
 
-  const dataIcon = data['icon'] ? ('http://192.168.100.2/API_Yogamap/assets/prof/' + data['icon']) : "http://192.168.100.2/API_Yogamap/assets/icon.png";
+  const dataIcon = data['icon'] ? ('https://yogamap.com.ar/assets/prof/' + data['icon']) : "https://yogamap.com.ar/assets/icon.png";
+
+  const Colors = useColors();
+  const styles = DynamicStyles(Colors)
 
   // MANEJAR EL TOP.BAR
   useLayoutEffect(() => {
@@ -130,7 +134,7 @@ export function ShowCommunity({ route }) {
     };
 
     try{
-      await axios.post('http://192.168.100.2/API_Yogamap/public/insert/message.php', { message: dataMessage }, { headers: { 'Content-Type': 'application/json' } });
+      await axios.post('https://yogamap.com.ar/public/insert/message.php', { message: dataMessage }, { headers: { 'Content-Type': 'application/json' } });
     } catch(error){ console.log("Falló la conexión al intentar guardar los mensajes... ", error); }
   }
 
@@ -183,7 +187,7 @@ export function ShowCommunity({ route }) {
           style={styles.input}
           onChangeText={(text) => setText(text)}
           placeholder="Escribe un mensaje"
-          placeholderTextColor='#ffffff50'
+          placeholderTextColor={Colors.placeholder}
           value={text}
         />
         <TouchableOpacity
@@ -246,7 +250,7 @@ export function ShowCommunity({ route }) {
   }
   const removeMessage = async (_id,content,time) => {
     try {
-      const response = await axios.post('http://192.168.100.2/API_Yogamap/public/delete/message.php', { content, time }, { headers: { 'Content-Type': 'application/json' } });
+      const response = await axios.post('https://yogamap.com.ar/public/delete/message.php', { content, time }, { headers: { 'Content-Type': 'application/json' } });
 
       if (response.data.success) {
         setMessages(prevMessages => prevMessages.filter(msg => msg._id !== _id));
@@ -259,10 +263,10 @@ export function ShowCommunity({ route }) {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       { data ?
       <>
-        <StatusBar barStyle="light" backgroundColor="#0c0715" />
+        <StatusBar barStyle="light" backgroundColor={Colors.background} />
         <GiftedChat
           messages={messages}
           onSend={messages => onSend(messages)}
@@ -272,6 +276,7 @@ export function ShowCommunity({ route }) {
         />
       </> : <ActivityIndicator size="large" color="#0c0715" /> }
 
+        
       <Modal
         animationType="slide"
         transparent={true}
@@ -309,27 +314,28 @@ export function ShowCommunity({ route }) {
           </View>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
   container: {
     width: '100%',
     padding: '4%',
     height: '100%',
-    backgroundColor: '#1A122E',
+    backgroundColor: Colors.background,
     gap: 16,
   },
   customHeader: {
-    height: 80,
-    backgroundColor: '#0c0715',
+    height: 70,
+    backgroundColor: Colors.background,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    elevation: 5,
   },
-  iconLeft: { color: '#fff', },
+  iconLeft: { color: Colors.headerIcons, },
   headerImg: {
     borderRadius: 100,
     width: 40,
@@ -337,14 +343,14 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   headerTitle: {
-    color: '#fff',
+    color: Colors.text,
     fontSize: 18,
   },
   headerSubtitle: {
-    color: '#ffffff70',
+    color: Colors.placeholder,
     fontSize: 14,
   },
-  iconRight: { color: '#fff', },
+  iconRight: { color: Colors.headerIcons, },
   message: {
     minWidth: 160,
     maxWidth: '80%',
@@ -370,7 +376,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     textAlign: 'left',
-    color: '#ffffffdd',
+    color: Colors.text,
     fontSize: 16,
     paddingRight: 40,
   },

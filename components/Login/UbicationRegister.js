@@ -1,7 +1,11 @@
 import { StyleSheet, View, Text, Pressable, TextInput } from 'react-native';
 import { TitleRegister } from './TitleRegister';
+import useColors from '../../Colors';
 
 export function UbicationRegister({ reverse, advance, ubication, setUbication }) {
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+
     return (
         <View style={styles.container}>
             <TitleRegister func={reverse} texting="Métodos de Pago y Comunidad" />
@@ -28,7 +32,7 @@ export function UbicationRegister({ reverse, advance, ubication, setUbication })
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',

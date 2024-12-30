@@ -39,7 +39,7 @@ export function WayClass({ route }){
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/typeofyogaperprof.php', { id: id });
+                const response = await axios.post('https://yogamap.com.ar/public/select/unique/typeofyogaperprof.php', { id: id });
 
                 if (response.data.success) { setTypesArray(response.data.types); }
                 else { setTypesArray([]); console.log("Warning: ", response.data.message); }
@@ -68,7 +68,7 @@ export function WayClass({ route }){
         if (typeYoga !== '' || horario != '') {
             const connection = async () => {
                 try {
-                    const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/horarios.php', 
+                    const response = await axios.post('https://yogamap.com.ar/public/select/horarios.php', 
                         { id, value: typeYoga, horario: horario },
                         { headers: { 'Content-Type': 'application/json' } }
                     );
@@ -148,7 +148,7 @@ export function WayClass({ route }){
             const idProf = id;
             const idUser = getUserID();
     
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/insert/notification.php',
+            const response = await axios.post('https://yogamap.com.ar/public/insert/notification.php',
                 { idProf, idUser, type, data },
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -254,7 +254,7 @@ export function WayClass({ route }){
     );
 }
 
-const styles = StyleSheet.create({  
+const DynamicStyles = (Colors) => StyleSheet.create({  
     container: {
         width: '100%',
         padding: '4%',
@@ -316,7 +316,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff20',
         borderRadius: 8,
     },
-    bg1:{ backgroundColor: '#8C5BFF', borderRadius:8 },
+    bg1:{
+        backgroundColor: '#8C5BFF',
+        borderRadius:8
+    },
     btn: {
         backgroundColor: '#8C5BFF',
         height: 50,

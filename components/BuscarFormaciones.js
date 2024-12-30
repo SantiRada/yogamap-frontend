@@ -6,6 +6,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { SearchBar } from './../components/SearchBar';
 import { ListFormaciones } from '../components/List/ListFormaciones';
+import useColors from '../Colors';
 
 export function BuscarFormaciones(){
 
@@ -24,6 +25,9 @@ export function BuscarFormaciones(){
 
     const handleSubmit = () => { setHasSearch(true); }
 
+    const Colors = useColors();
+    const style = DynamicStyles(Colors);
+
     return(
         <View style={style.container}>
             {stateSearch ? (
@@ -41,7 +45,7 @@ export function BuscarFormaciones(){
                         <TextInput
                             style={style.inputSmall}
                             onChangeText={setSearchData}
-                            placeholderTextColor="#ffffff70"
+                            placeholderTextColor={Colors.placeholder}
                             placeholder="Buscar profe o Tipo de Yoga"
                             onSubmitEditing={handleSubmit}
                             value={searchData}
@@ -66,15 +70,15 @@ export function BuscarFormaciones(){
     );
 }
 
-const style = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
         padding: '4%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     iconLeft: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginLeft: 16,
     },
     listChip: {
@@ -82,13 +86,13 @@ const style = StyleSheet.create({
         gap: 8,
     },
     chip: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: 'transparent',
         paddingVertical: 8,
         paddingHorizontal: 12,
         borderRadius: 8,
     },
     chipText:{
-        color: '#fff',
+        color: Colors.text,
         fontSize: 12,
     },
     inputBig: {
@@ -100,12 +104,12 @@ const style = StyleSheet.create({
         zIndex: 5,
         top: 10,
         left: 12,
-        color: '#fff',
+        color: Colors.text,
     },
     inputSmall: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 12,
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         padding: 8,
         paddingLeft: (16+28),
         borderRadius: 12,
@@ -115,7 +119,7 @@ const style = StyleSheet.create({
     },
     title: {
         fontSize: 18,
-        color: '#fff',
+        color: Colors.text,
         fontWeight: 'bold',
         marginBottom: 8,
     },

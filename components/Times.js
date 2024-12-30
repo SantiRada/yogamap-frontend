@@ -1,8 +1,11 @@
 import { StyleSheet, View, Image, Text } from 'react-native';
+import useColors from '../Colors';
 
 export function Times(){
 
     const countTimes = 0;
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
 
     return(
         <View style={styles.container}>
@@ -20,9 +23,9 @@ export function Times(){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         flex: 1,
     },
     voidFav: {
@@ -35,10 +38,11 @@ const styles = StyleSheet.create({
     image: {
         width: 138,
         height: 180,
+        marginTop:20,
         opacity: 0.6,
     },
     voidText: {
-        color: '#ffffff50',
+        color: Colors.placeholder,
         textAlign: 'center',
         fontSize: 16,
         padding: 16,

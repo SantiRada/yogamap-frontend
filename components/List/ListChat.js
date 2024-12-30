@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, Image, Pressable, Text } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, TouchableOpacity, Text } from 'react-native';
+import useColors from '../../Colors';
 
 export function ListChat({ data }) {
     const [timeFormatted, setTimeFormatted] = useState('');
@@ -41,12 +42,17 @@ export function ListChat({ data }) {
         navigation.navigate('ShowCommunity', { id });
     };
 
-    const dataIcon = data.icon ? ('http://192.168.100.2/API_Yogamap/assets/prof/' + data.icon) : 'http://192.168.100.2/API_Yogamap/assets/icon.png';
+    const dataIcon = data.icon ? ('https://yogamap.com.ar/assets/prof/' + data.icon) : 'https://yogamap.com.ar/assets/icon.png';
+
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors);
+
+    console.log(data)
 
     return (
-        <ScrollView style={styles.listChat}>
+        <ScrollView key={data.id} style={styles.listChat}>
             <View>
-                <Pressable style={styles.chat} onPress={() => { clicChat(data.id); }}>
+                <TouchableOpacity style={styles.chat} onPress={() => { clicChat(data.id); }}>
                     <Image source={{ uri: dataIcon }} style={styles.imagenChat} />
                     <View style={styles.contentChat}>
                         <View style={styles.topContent}>
@@ -58,13 +64,13 @@ export function ListChat({ data }) {
                             <Text style={styles.times}>{data.lastTime}</Text>
                         </View>
                     </View>
-                </Pressable>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     listChat: { gap: 8 },
     chat: {
         paddingVertical: 8,
@@ -86,9 +92,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    name: { color: '#fff' },
+    name: { color: Colors.text },
     newMessage: {
-        backgroundColor: '#fff',
+        backgroundColor: Colors.text,
         borderRadius: 100,
         width: 10,
         height: 10,
@@ -98,6 +104,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    message: { color: '#ffffff50' },
-    times: { color: '#ffffff50' },
+    message: { color: Colors.placeholder },
+    times: { color: Colors.placeholder },
 });

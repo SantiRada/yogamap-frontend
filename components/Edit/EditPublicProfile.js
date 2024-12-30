@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, View, Pressable, TextInput, Text, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import useColors from '../../Colors';
 
 import axios from 'axios';
 
@@ -84,13 +85,16 @@ export function EditPublicProfile({ route }) {
         )
     }
 
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors)
+
     return(
         <View style={styles.container}>
             <Text style={styles.title}>Editar {nameContent}</Text>
             <Text style={styles.subtitle}>Para editar tu {nameContent} necesitas ingresar tu contraseña actual, esto evitará que tu información se pueda manipular por las personas incorrectas.</Text>
             <TextInput
                 placeholder='Contraseña Actual'
-                placeholderTextColor={'#ffffff50'}
+                placeholderTextColor={Colors.placeholder}
                 style={styles.input}
                 onChangeText={setPass}
                 value={pass}
@@ -99,7 +103,7 @@ export function EditPublicProfile({ route }) {
             { type == 'name' ?
                 <TextInput
                     placeholder='Nombre de Usuario'
-                    placeholderTextColor={'#ffffff50'}
+                    placeholderTextColor={Colors.placeholder}
                     style={styles.input}
                     onChangeText={setName}
                     value={name}
@@ -107,7 +111,7 @@ export function EditPublicProfile({ route }) {
                 <View>
                     <TextInput
                         placeholder='Contraseña Nueva'
-                        placeholderTextColor={'#ffffff50'}
+                        placeholderTextColor={Colors.placeholder}
                         style={styles.input}
                         onChangeText={setNewPass}
                         value={newPass}
@@ -115,7 +119,7 @@ export function EditPublicProfile({ route }) {
                     />
                     <TextInput
                         placeholder='Repetir Contraseña Nueva'
-                        placeholderTextColor={'#ffffff50'}
+                        placeholderTextColor={Colors.placeholder}
                         style={styles.input}
                         onChangeText={setNewPassTwo}
                         value={newPassTwo}
@@ -125,7 +129,7 @@ export function EditPublicProfile({ route }) {
                 <View>
                     <TextInput
                         placeholder='Correo Electrónico'
-                        placeholderTextColor={'#ffffff50'}
+                        placeholderTextColor={Colors.placeholder}
                         style={styles.input}
                         onChangeText={setMail}
                         value={mail}
@@ -144,30 +148,31 @@ export function EditPublicProfile({ route }) {
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         padding: '4%',
         paddingTop: 0,
         height: '100%',
-        backgroundColor: '#1A122E',
+        paddingTop:20,
+        backgroundColor: Colors.background,
     },
     title: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 24,
         fontWeight: 'bold',
     },
     subtitle: {
-        color: '#ffffff50',
+        color: Colors.placeholder,
         marginTop: 4,
         marginBottom: 24,
         fontSize: 14,
     },
     input: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         padding: 8,
         paddingLeft: 24,
-        color: '#fff',
+        color: Colors.text,
         borderRadius: 8,
         marginBottom: 16,
     },
@@ -179,7 +184,7 @@ const styles = StyleSheet.create({
     },
     btnText: {
         textAlign: 'center',
-        color: '#fff',
+        color: "white",
         fontSize: 16,
         fontWeight: 'bold',
     },

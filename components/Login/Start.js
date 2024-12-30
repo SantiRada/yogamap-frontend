@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, Pressable, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useColors from '../../Colors';
 
 export function Start() {
 
@@ -18,14 +19,17 @@ export function Start() {
     checkUserData();
 }, [navigation]);
 
+const Colors = useColors();
+const styles = DynamicStyles(Colors);
+
   return (
     <View style={styles.container}>
-      <Image source={{ uri: "http://192.168.100.2/API_Yogamap/assets/logo.png" }} style={styles.logo} />
+      <Image source={{ uri: "https://yogamap.com.ar/assets/logo.png" }} style={styles.logo} />
       <Text style={styles.title}>YOGAmap</Text>
       <Text style={styles.subtitle}>Encontrá profes, escuelas, eventos y reuniones del mundo del yoga</Text>
       <View style={styles.buttons}>
         <Pressable style={styles.btn} onPress={ () => { navigation.navigate('Login', { type: 'users' }) } }>
-            <Text style={styles.textBtn}>Soy Practicante</Text>
+            <Text style={[styles.textBtn, {color:"white"}]}>Soy Practicante</Text>
         </Pressable>
         <Pressable style={styles.btnBase} onPress={ () => { navigation.navigate('Login', { type: 'prof' }) } }>
             <Text style={styles.textBtn}>Soy Profesor/Organizador</Text>
@@ -35,12 +39,12 @@ export function Start() {
   );
 };
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: '24%',
     width: '100%',
-    backgroundColor: '#1A122E',
+    backgroundColor: Colors.background,
     paddingHorizontal: '4%',
     maxWidth: '100vw',
     maxHeight: '100vh',
@@ -48,19 +52,20 @@ const styles = StyleSheet.create({
   },
   logo: {
     alignSelf: 'center',
-    width: 150,
-    height: 150,
+    width: 100,
+    height: 100,
+    marginTop:90
   },
   title: {
       width: '100%',
       fontSize: 36,
       fontWeight: 'bold',
       textAlign: 'center',
-      color: '#fff',
+      color: Colors.text,
       marginBottom: 8,
   },
   subtitle: {
-    color: '#fff',
+    color: Colors.text,
     opacity: 0.5,
     textAlign: 'center',
     marginHorizontal: 44,
@@ -96,9 +101,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textBtn: {
-    color: '#fff',
     textAlign: 'center',
     fontSize: 16,
+    color:Colors.text
   },
   weight: { fontWeight: 'bold', }
 });

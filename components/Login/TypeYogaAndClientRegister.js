@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Pressable } from 'react-native';
 import axios from 'axios';
 import { TitleRegister } from './TitleRegister';
+import useColors from '../../Colors';
 
 export function TypeYogaAndClientRegister({ reverse, advance, typeYoga, setTypeYoga, typeAlumn, setTypeAlumn }) {
     const [data, setData] = useState([]);
@@ -45,6 +46,9 @@ export function TypeYogaAndClientRegister({ reverse, advance, typeYoga, setTypeY
         });
     }
 
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+
     return (
         <View style={styles.container}>
             <TitleRegister func={reverse} texting="Tipo de Cuenta" />
@@ -86,7 +90,7 @@ export function TypeYogaAndClientRegister({ reverse, advance, typeYoga, setTypeY
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',

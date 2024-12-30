@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, StyleSheet, TextInput } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import useColors from '../Colors';
 
 import axios from 'axios';
 
 export function SearchEvent({setData, setHasSearch}){
 
     const [search, setSearchInput] = useState('');
+
+    const Colors = useColors()
+    const style = DynamicStyles(Colors);
     
     useFocusEffect(React.useCallback(() => { return () => {
         setSearchInput('');
@@ -16,7 +20,7 @@ export function SearchEvent({setData, setHasSearch}){
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/eventFeed.php', { search }, { headers: { 'Content-Type': 'application/json' } });
+            const response = await axios.post('https://yogamap.com.ar/public/select/eventFeed.php', { search }, { headers: { 'Content-Type': 'application/json' } });
             if (response.data.success) {
                 setHasSearch(true);
                 if(response.data.event){
@@ -37,7 +41,7 @@ export function SearchEvent({setData, setHasSearch}){
                 <TextInput
                     style={style.inputSmall}
                     onChangeText={setSearchInput}
-                    placeholderTextColor="#ffffff70"
+                    placeholderTextColor={Colors.placeholder}
                     placeholder="Buscar eventos"
                     value={search}
                     onSubmitEditing={handleSubmit}
@@ -48,19 +52,19 @@ export function SearchEvent({setData, setHasSearch}){
     );
 }
 
-const style = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     listChip: {
         flexDirection: 'row',
         gap: 8,
     },
     chip: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         paddingVertical: 8,
         paddingHorizontal: 12,
         borderRadius: 8,
     },
     chipText:{
-        color: '#fff',
+        color: Colors.text,
         fontSize: 12,
     },
     inputBig: {
@@ -71,11 +75,11 @@ const style = StyleSheet.create({
         zIndex: 5,
         top: 12,
         left: 12,
-        color: '#fff',
+        color: Colors.text,
     },
     inputSmall: {
-        color: '#fff',
-        backgroundColor: '#3C2C61',
+        color: Colors.text,
+        backgroundColor: Colors.inputBG,
         padding: 10,
         paddingLeft: (16+28),
         borderRadius: 12,

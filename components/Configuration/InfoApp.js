@@ -1,7 +1,11 @@
 import { View, StyleSheet, Image, Text } from 'react-native';
+import useColors from '../../Colors';
 
 export function InfoApp(){
     const items = [ "Link de Invitación con un clic.", "Detección de comunidades activas para este perfil.", "" ];
+
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
 
     return(
         <View style={styles.container}>
@@ -20,20 +24,20 @@ export function InfoApp(){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         padding: '4%',
         paddingTop: 0,
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         justifyContent: 'center',
         alignItems: 'center',
         paddingBottom: 72,
     },
     name: {
         fontSize: 24,
-        color: '#fff',
+        color: Colors.text,
         fontWeight: 'bold',
         marginBottom: 8,
     },
@@ -41,14 +45,14 @@ const styles = StyleSheet.create({
         width: '100%',
         textAlign: 'center',
         fontSize: 16,
-        color: '#ffffff50',
+        color: Colors.placeholder,
         paddingBottom: 24,
-        borderBottomColor: '#ffffff50',
+        borderBottomColor: Colors.placeholder,
         borderBottomWidth: 1,
     },
     title: {
         fontSize: 16,
-        color: '#fff',
+        color: Colors.text,
         width: '100%',
         paddingBlock: 16,
         fontWeight: 'bold',
@@ -61,11 +65,11 @@ const styles = StyleSheet.create({
     },
     bullet: {
         fontSize: 14,
-        color: '#ffffff80',
+        color: Colors.placeholder,
         width: 15,
     },
     text: {
         fontSize: 14,
-        color: '#ffffff80',
+        color: Colors.placeholder,
     }
 });

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import axios from 'axios';
+import useColors from '../../Colors';
 
 import { TypeAccountRegister } from './TypeAccountRegister';
 import { TypeYogaAndClientRegister } from './TypeYogaAndClientRegister';
@@ -51,6 +52,9 @@ export function RegisterProf({ route }) {
         if(space == 5) { connection(); }
     }, [space]);
 
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+    
     return (
         <View style={styles.container}>
             {space == 0 && 
@@ -103,11 +107,11 @@ export function RegisterProf({ route }) {
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         paddingHorizontal: '4%',
     },
     logo: {
@@ -131,7 +135,7 @@ const styles = StyleSheet.create({
         marginBottom: 32,
     },
     input: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         width: '100%',
         padding: 8,
         paddingLeft: 24,

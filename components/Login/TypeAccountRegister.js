@@ -1,7 +1,12 @@
 import { StyleSheet, View, Text, Pressable } from 'react-native';
 import { TitleRegister } from './TitleRegister';
+import useColors from '../../Colors';
 
 export function TypeAccountRegister({ advance, typeAccount, setTypeAccount }) {
+
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+
     return (
         <View style={styles.container}>
             <TitleRegister />
@@ -29,20 +34,20 @@ export function TypeAccountRegister({ advance, typeAccount, setTypeAccount }) {
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     question: {
         fontSize: 18,
-        color: '#fff',
+        color: Colors.text,
     },
     aclaration: {
         fontSize: 14,
         opacity: 0.5,
-        color: '#fff',
+        color: Colors.text,
     },
     content: {
         marginVertical: 20,

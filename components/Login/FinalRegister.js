@@ -1,5 +1,6 @@
 import { StyleSheet, View, Text, Pressable, Share, ToastAndroid } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useColors } from '../../Colors';
 
 import { TitleRegister } from './TitleRegister';
 import { useNavigation } from '@react-navigation/native';
@@ -30,6 +31,9 @@ export function FinalRegister({prof}) {
         // ToastAndroid.show('¡Enlace copiado!', ToastAndroid.SHORT);
     };
 
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+
     return (
         <View style={styles.container}>
             <TitleRegister />
@@ -46,12 +50,13 @@ export function FinalRegister({prof}) {
     );
 };
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
       width: '100%',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems:'center',
+      backgroundColor: Colors.background,
     },
     btn: {
         backgroundColor: '#8C5BFF',
@@ -64,7 +69,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     textBtn: {
-        color: '#fff',
+        color: Colors.text,
         textAlign: 'center',
         fontSize: 16,
     },

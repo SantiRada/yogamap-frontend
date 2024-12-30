@@ -11,7 +11,7 @@ export function InfoProf({id, size}){
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/prof.php', { id }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/unique/prof.php', { id }, { headers: { 'Content-Type': 'application/json' } });
             
                 if (response.data.success) {
                     if(response.data.prof) { setData(response.data.prof[0]); }
@@ -27,7 +27,7 @@ export function InfoProf({id, size}){
 
     return(
         <Pressable style={styles.stats} onPress={ () => { navigation.navigate('ShowProf', {id: data.id }) } }>
-            <Image source={{ uri: 'http://192.168.100.2/API_Yogamap/assets/prof/' + data.icon }} style={[styles.image, ( size == "min" ? styles.size2 : styles.size1 )]} />
+            <Image source={{ uri: 'https://yogamap.com.ar/assets/prof/' + data.icon }} style={[styles.image, ( size == "min" ? styles.size2 : styles.size1 )]} />
             <View style={styles.spaceText}>
                 <Text style={styles.name}>{data.name}</Text>
                 <Text style={styles.desc}>{data.typesofyoga}</Text>
