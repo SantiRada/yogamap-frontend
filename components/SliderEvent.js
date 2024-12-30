@@ -54,7 +54,7 @@ export function SliderEvent({ route }) {
 
     const renderItem = ({ item }) => (
         <Pressable onPress={ () => { item.id == 0 ? navigation.navigate('CreateEvent', { id: idProf }) : navigation.navigate('ShowEvent', {id: item.id, idProf: idProf, idUser: idUser}) } } style={styles.event}>
-            <Image source={{ uri: "http://192.168.100.2/API_Yogamap/assets/events/" + item.image }} style={styles.eventImage} />
+            <Image source={{ uri: "https://yogamap.com.ar/assets/events/" + item.image }} style={styles.eventImage} />
             <View style={styles.filter}></View>
             <View style={styles.spaceText}>
                 <Text style={styles.eventTitle}>{item.title}</Text>

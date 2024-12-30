@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
@@ -14,6 +14,7 @@ import { TypesOfYoga } from './../components/TypesOfYoga';
 
 import { userData } from './../UserData';
 import { profData } from './../ProfData';
+import useColors from '../Colors';
 
 import axios from 'axios';
 
@@ -77,6 +78,9 @@ export function Home({ navigation }) {
         });
     }, [navigation]);
 
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
+
     // Si está cargando, mostramos el indicador de carga
     if (loading) {
         return (
@@ -88,14 +92,14 @@ export function Home({ navigation }) {
 
     // Renderizado condicional dependiendo si es profesor o no
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <SearchBar text="Buscar profe o Tipo de Yoga" />
             {dataUser?.idprof && dataProf ? (
                 <View style={styles.containProf}>
                     <Top.Navigator
                         screenOptions={{
                             tabBarStyle: {
-                                backgroundColor: '#1A122E',
+                                backgroundColor: "'#1A122E'",
                                 elevation: 0,
                                 shadowOpacity: 0,
                             },
@@ -108,8 +112,8 @@ export function Home({ navigation }) {
                                 borderRadius: 8,
                                 backgroundColor: '#3C2C61',
                             },
-                            tabBarActiveTintColor: '#fff',
-                            tabBarInactiveTintColor: '#ccc',
+                            tabBarActiveTintColor: Colors.text,
+                            tabBarInactiveTintColor: Colors.ligthText,
                         }}
                     >
                         <Top.Screen name="Mis Eventos" component={SliderEvent} initialParams={{ idUser: dataUser.id, title: true }} />
@@ -125,24 +129,23 @@ export function Home({ navigation }) {
                     <TypesOfYoga />
                 </View>
             )}
-        </View>
+        </ScrollView>
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         padding: '4%',
-        height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     iconLeft: {
         marginLeft: 16,
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
     },
     iconRight: {
         marginRight: 16,
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
     },
     loadingText: {
         color: '#fff',

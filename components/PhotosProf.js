@@ -12,7 +12,7 @@ export function PhotosProf({ id }) {
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/images.php', { id: id });
+                const response = await axios.post('https://yogamap.com.ar/public/select/images.php', { id: id });
 
                 if (response.data.success) { setPhotos(response.data.images); }
                 else { console.log("Warn: ", response.data.message); }

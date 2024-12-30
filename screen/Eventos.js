@@ -2,6 +2,7 @@ import { useState, useEffect, useLayoutEffect, useCallback } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFocusEffect } from '@react-navigation/native';
+import useColors from '../Colors';
 
 import axios from 'axios';
 
@@ -11,10 +12,13 @@ import { VoidEvent } from '../components/Void/VoidEvent';
 
 export function Eventos({ navigation }){
 
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerStyle: { backgroundColor: '#1A122E' },
-            headerTitleStyle: { color: '#E3D8FF' },
+            headerStyle: { backgroundColor: Colors.background },
+            headerTitleStyle: { color: Colors.text2 },
             headerTintColor: '#E3D8FF',
             headerRight: () => (
                 <MaterialIcons 
@@ -46,7 +50,7 @@ export function Eventos({ navigation }){
         useCallback(() => {
             const connectionEvent = async () => {
                 try {
-                    const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/eventFeed.php', 
+                    const response = await axios.post('https://yogamap.com.ar/public/select/eventFeed.php', 
                         { id, count },
                         { headers: { 'Content-Type': 'application/json' } }
                     );
@@ -79,20 +83,20 @@ export function Eventos({ navigation }){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         width: '100%',
         height: '100%',
         padding: '4%',
         gap: 8,
     },
     iconLeft: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginLeft: 16,
     },
     iconRight: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginRight: 16,
     },
 });

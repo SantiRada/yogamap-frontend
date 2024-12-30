@@ -33,7 +33,7 @@ export function PricesPerProf({ idProf }){
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/prices.php', { id: idProf });
+                const response = await axios.post('https://yogamap.com.ar/public/select/prices.php', { id: idProf });
 
                 if (response.data.success) { setPrices(response.data.prices); }
                 else { console.log("Warn: ", response.data.message); }

@@ -18,7 +18,7 @@ export function FavItems({ id, type }){
         useCallback(() => {
             const fetchData = async () => {
                 try {
-                    const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/favQuery.php', {
+                    const response = await axios.post('https://yogamap.com.ar/public/select/unique/favQuery.php', {
                         id,
                         idUser,
                         type
@@ -38,7 +38,7 @@ export function FavItems({ id, type }){
         setFav(!fav);
 
         try {
-          const response = await axios.post('http://192.168.100.2/API_Yogamap/public/update/fav.php', {
+          const response = await axios.post('https://yogamap.com.ar/public/update/fav.php', {
             id,
             idUser,
             type,

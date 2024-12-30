@@ -23,7 +23,7 @@ export function TimesPerProf({ idProf }) {
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/typeofyogaperprof.php', { id: idProf }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/unique/typeofyogaperprof.php', { id: idProf }, { headers: { 'Content-Type': 'application/json' } });
                 if (response.data.success) {
                     if (response.data.types) {
                         setData(response.data.types);
@@ -44,7 +44,7 @@ export function TimesPerProf({ idProf }) {
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/horarios.php', {
+                const response = await axios.post('https://yogamap.com.ar/public/select/horarios.php', {
                     id: idProf,
                     value: typeOfYoga
                 }, { headers: { 'Content-Type': 'application/json' } });

@@ -3,6 +3,7 @@ import { View, StyleSheet, Vibration, Pressable, Text, Modal, ToastAndroid } fro
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useColors from '../../Colors'
 
 export function Notificaciones(){
 
@@ -56,6 +57,9 @@ export function Notificaciones(){
         });
     }, [navigation]);
 
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors)
+
     return(
         <View style={styles.container}>
             <Pressable style={ styles.option } onPress={ () => setShowModalVibrate(true) }>
@@ -78,7 +82,7 @@ export function Notificaciones(){
                         <View style={styles.titleModal}>
                             <Text style={styles.titleModalText}>Vibración</Text>
                             <Pressable style={styles.iconModal} onPress={() => setShowModalVibrate(false)}>
-                                <MaterialIcons name='close' size={24} color='#eee' />
+                                <MaterialIcons name='close' size={24} color={Colors.text} />
                             </Pressable>
                         </View>
                         { listVibrates.map((item, index) => (
@@ -98,48 +102,48 @@ export function Notificaciones(){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         padding: '4%',
         paddingTop: 0,
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     iconLeft: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginRight: 8,
     },
     icon: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
     },
     option: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 16,
         height: 70,
-        borderBottomColor: '#ffffff16',
+        borderBottomColor: Colors.placeholder,
         borderBottomWidth: 1,
     },
     title: {
-        color: '#E3D8FF',
+        color: Colors.text2,
         fontSize: 16,
     },
     subtitle: {
-        color: '#E3D8FF',
+        color: Colors.text2,
         opacity: 0.4,
     },
     red: { color: 'red', },
     overlay: {
         flex: 1,
-        backgroundColor: '#000000aa',
+        backgroundColor: "#00000050",
         justifyContent: 'center',
         justifyContent: 'center',
         alignItems: 'center',
     },
     content: {
         width: '75%',
-        backgroundColor: '#281d46',
+        backgroundColor: Colors.background,
         padding: 32,
         borderRadius: 32,
     },
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     titleModalText: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 18,
         fontWeight: 'bold',
     },
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
         paddingBlock: 16,
     },
     radio: {
-        backgroundColor: '#ffffffff',
+        backgroundColor: Colors.text,
         borderRadius: '100%',
         width: 20,
         height: 20,
@@ -172,11 +176,11 @@ const styles = StyleSheet.create({
     select: {
         width: 12,
         height: 12,
-        backgroundColor: '#281d46',
+        backgroundColor: Colors.background,
         borderRadius: '100%',
     },
     textOption: {
-        color: '#ffffff70',
+        color: Colors.placeholder,
         fontSize: 14,
     },
 });

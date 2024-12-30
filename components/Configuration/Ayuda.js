@@ -1,6 +1,7 @@
 import { View, StyleSheet, Pressable, Text, Linking, Alert } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import useColors from '../../Colors';
 
 export function Ayuda(){
 
@@ -16,6 +17,9 @@ export function Ayuda(){
           Alert.alert('Error', 'No se puede abrir el enlace: ' + url);
         }
     }
+
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
 
     return(
         <View style={styles.container}>
@@ -36,35 +40,35 @@ export function Ayuda(){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         padding: '4%',
         paddingTop: 0,
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     iconLeft: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginRight: 8,
     },
     icon: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
     },
     option: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 16,
         height: 70,
-        borderBottomColor: '#ffffff16',
+        borderBottomColor: Colors.placeholder,
         borderBottomWidth: 1,
     },
     title: {
-        color: '#E3D8FF',
+        color: Colors.text2,
         fontSize: 16,
     },
     subtitle: {
-        color: '#E3D8FF',
+        color: Colors.text2,
         opacity: 0.4,
     },
     red: { color: 'red', }

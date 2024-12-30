@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { View, StyleSheet, Pressable, Image, Text } from 'react-native';
+import useColors from '../Colors';
 
 import { VoidEvent } from './Void/VoidEvent';
 import { getProfID } from './../ProfData';
@@ -12,6 +13,9 @@ export function FeedEvent({ dataEvent }){
     const navigation = useNavigation();
     let data = dataEvent;
 
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
+
     return(
         <View style={styles.listEvent}>
             { data.length > 0 ? 
@@ -19,13 +23,13 @@ export function FeedEvent({ dataEvent }){
                     <Pressable key={index} style={styles.event} onPress={ () => { navigation.navigate('ShowEvent', {id: item.id, idProf: idProf}) } }>
                         <View style={styles.sectorTitle}>
                             <Pressable style={styles.sectorProf} onPress={ () => { navigation.navigate('ShowProf', { id: item.profId } ) } }>
-                                <Image source={{ uri: item.imgProf ? ("http://192.168.100.2/API_Yogamap/assets/prof/" + item.imgProf) : "http://192.168.100.2/API_Yogamap/assets/icon.png" }} style={styles.profImage} />
+                                <Image source={{ uri: item.imgProf ? ("https://yogamap.com.ar/assets/prof/" + item.imgProf) : "https://yogamap.com.ar/assets/icon.png" }} style={styles.profImage} />
                                 <Text style={styles.profName}>{item.nameProf}</Text>
                             </Pressable>
                             <FavItems id={item.id} type="event" />
                         </View>
                         <View style={styles.sectorImg}>
-                            <Image source={{ uri: "http://192.168.100.2/API_Yogamap/assets/events/" + item.image }} style={styles.imgEvent} />
+                            <Image source={{ uri: "https://yogamap.com.ar/assets/events/" + item.image }} style={styles.imgEvent} />
                             <View style={styles.filter}></View>
                             <View style={styles.sectorText}>
                                 <Text style={styles.title}>{item.title}</Text>
@@ -40,7 +44,7 @@ export function FeedEvent({ dataEvent }){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({ 
     listEvent: {
         flexDirection: 'column',
         gap: 8,
@@ -68,7 +72,7 @@ const styles = StyleSheet.create({
     },
     profName: {
         fontSize: 16,
-        color: '#fff',
+        color: Colors.text,
     },
     sectorImg: {
         position: 'relative',

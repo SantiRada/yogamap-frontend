@@ -1,6 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { StyleSheet, View, ScrollView, Image, Pressable, Text } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import useColors from '../../Colors';
 
 import { ListProf } from '../List/ListProf';
 import { useNavigation } from '@react-navigation/native';
@@ -61,6 +62,9 @@ export function ShowTypeOfYoga({ route }) {
         );
     };
 
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors);
+
     return (
         <ScrollView style={styles.container}>
             <Image source={{ uri: 'http://192.168.100.2/API_Yogamap/assets/TypesOfYoga/' + data.id + '.png'}} style={styles.image} />
@@ -90,15 +94,15 @@ export function ShowTypeOfYoga({ route }) {
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         gap: 16,
     },
-    icon: { color: '#fff', },
-    iconRight: { color: '#fff', },
+    icon: { color: Colors.headerIcons, },
+    iconRight: { color: Colors.headerIcons, },
     image:{
         width: '100%',
         aspectRatio: '16 / 9',
@@ -111,18 +115,18 @@ const styles = StyleSheet.create({
         marginBottom: 24,
     },
     title: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 24,
         fontWeight: 'bold',
     },
     description: {
-        color: '#fff',
+        color: Colors.text,
         opacity: 0.5,
         fontSize: 14,
         lineHeight: 20,
     },
     subtitle:{
-        color: '#fff',
+        color: Colors.text,
         opacity: 0.75,
         fontWeight: 'bold',
         fontSize: 16,
@@ -132,12 +136,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 16,
-        borderBottomColor: '#ffffff20',
+        borderBottomColor: Colors.placeholder,
         borderBottomWidth: 1,
 
     },
     desplegable: {
-        borderBottomColor: '#ffffff20',
+        borderBottomColor: Colors.placeholder,
         borderBottomWidth: 1,
         paddingVertical: 16,
     },

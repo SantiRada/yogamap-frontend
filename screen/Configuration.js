@@ -4,6 +4,7 @@ import * as Clipboard from 'expo-clipboard';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useColors from '../Colors';
 
 export function Configuration(){
 
@@ -44,6 +45,10 @@ export function Configuration(){
         Clipboard.setStringAsync("http://yogamap.com.ar");
         ToastAndroid.show('¡Link de Invitación, copiado!', ToastAndroid.SHORT);
       }
+
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+
 
     return (
         <View style={styles.container}>
@@ -89,35 +94,35 @@ export function Configuration(){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         padding: '4%',
         paddingTop: 0,
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     iconLeft: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginRight: 8,
     },
     icon: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
     },
     option: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 16,
         height: 65,
-        borderBottomColor: '#ffffff16',
+        borderBottomColor: Colors.placeholder,
         borderBottomWidth: 1,
     },
     title: {
-        color: '#E3D8FF',
+        color: Colors.text,
         fontSize: 14,
     },
     subtitle: {
-        color: '#E3D8FF',
+        color: Colors.text,
         opacity: 0.4,
         fontSize: 12,
     },

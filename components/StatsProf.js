@@ -11,7 +11,7 @@ export function StatsProf({id}) {
     useEffect(() => {
         const SearchData = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/prof.php', { id }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/unique/prof.php', { id }, { headers: { 'Content-Type': 'application/json' } });
             
                 if (response.data.success) { setData(response.data.prof[0]); }
               } catch (error) {
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
         gap: 8,
         flexDirection: 'row',
         flexWrap: 'wrap',
+        paddingTop:20,
     },
     option:{
         flexBasis: '47%',

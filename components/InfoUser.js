@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, View, Image, Pressable, Text } from 'react-native';
 import axios from 'axios';
+import useColors from '../Colors';
 
 export function InfoUser({id}){
 
@@ -9,7 +10,7 @@ export function InfoUser({id}){
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/users.php', { id }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/unique/users.php', { id }, { headers: { 'Content-Type': 'application/json' } });
             
                 if (response.data.success) {
                     if(response.data.users) { setData(response.data.users); }
@@ -23,7 +24,10 @@ export function InfoUser({id}){
         connection();
     }, [id]);
 
-    const dataIcon = (data.icon != null ? ('http://192.168.100.2/API_Yogamap/assets/prof/' + data.icon) : "http://192.168.100.2/API_Yogamap/assets/icon.png");
+    const dataIcon = (data.icon != null ? ('https://yogamap.com.ar/assets/prof/' + data.icon) : "https://yogamap.com.ar/assets/icon.png");
+
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
 
     return(
         <View style={ styles.stats }>
@@ -41,12 +45,12 @@ export function InfoUser({id}){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     stats: {
         gap: 24,
         paddingBottom: 24,
         borderBottomWidth: 1,
-        borderBottomColor: '#ffffff30',
+        borderBottomColor: Colors.placeholder,
     },
     statsSector: {
         flexDirection: 'row',
@@ -62,12 +66,12 @@ const styles = StyleSheet.create({
         borderRadius: 100,
     },
     name: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 18,
         fontWeight: 'bold',
     },
     mail: {
-        color: '#ffffff50',
+        color: Colors.placeholder,
         fontSize: 14,
     },
     btn: {

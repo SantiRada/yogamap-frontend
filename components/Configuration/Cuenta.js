@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, StyleSheet, Pressable, Text, Alert, Modal } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import useColors from '../../Colors';
 
 import { getUserID } from './../../UserData';
 
@@ -56,6 +57,9 @@ export function Cuenta(){
     }
 
     const closeModal = () => { setShowModal(false); }
+
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
 
     return(
             <View style={styles.container}>
@@ -113,38 +117,38 @@ export function Cuenta(){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         padding: '4%',
         paddingTop: 0,
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     iconLeft: {
-        color: '#E3D8FF',
+        color: Colors.text2,
         marginRight: 8,
     },
-    icon: { color: '#E3D8FF', },
+    icon: { color: Colors.text2, },
     option: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 16,
         height: 70,
-        borderBottomColor: '#ffffff16',
+        borderBottomColor: Colors.placeholder,
         borderBottomWidth: 1,
     },
     title: {
-        color: '#E3D8FF',
+        color: Colors.text2,
         fontSize: 16,
     },
     subtitle: {
-        color: '#E3D8FF',
+        color: Colors.text2,
         opacity: 0.4,
     },
     red: { color: 'red', },
     overlay: {
-        backgroundColor: '#000000aa',
+        backgroundColor: Colors.placeholder,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
@@ -152,7 +156,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     content: {
-        backgroundColor: '#281d46',
+        backgroundColor: Colors.background,
         paddingTop: 16,
         padding: 32,
         borderTopLeftRadius: 32,
@@ -166,7 +170,7 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     subtitleModal: {
-        color: '#ffffff50',
+        color: Colors.placeholder,
         fontSize: 14,
     },
     listButtons: {

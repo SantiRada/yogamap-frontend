@@ -1,6 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { StyleSheet, View, ScrollView, Image, Pressable, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import useColors from '../../Colors';
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
@@ -65,6 +66,9 @@ export function ShowEvent({ route }){
         connectionEvent();
     }, [id, idUser, countAssist]);
     
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+
     useLayoutEffect(() => {
         if (data.idorg && idProf === data.idorg) {
             navigation.setOptions({
@@ -101,8 +105,8 @@ export function ShowEvent({ route }){
                 <Text style={styles.description}>{data.description}</Text>
                 <Text style={styles.title}>Ubicación y Horarios</Text>
                 <View style={styles.listChip}>
-                    <Text style={[styles.chip, { color: '#fff', } ]}>{data.horarios}</Text>
-                    <Text style={[styles.chip, { color: '#fff', } ]}>{data.ubication}</Text>
+                    <Text style={[styles.chip, { color: Colors.text, } ]}>{data.horarios}</Text>
+                    <Text style={[styles.chip, { color: Colors.text, } ]}>{data.ubication}</Text>
                 </View>
                 { (idProf != null && idProf == data.idorg) ? 
                     (
@@ -123,15 +127,15 @@ export function ShowEvent({ route }){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         gap: 16,
     },
-    icon: { color: '#fff', },
-    iconRight: { color: '#fff', },
+    icon: { color: Colors.text, },
+    iconRight: { color: Colors.text, },
     image:{
         width: '100%',
         height: 220,
@@ -144,7 +148,7 @@ const styles = StyleSheet.create({
         marginBottom: 24,
     },
     title: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 24,
         fontWeight: 'bold',
     },
@@ -156,12 +160,12 @@ const styles = StyleSheet.create({
     chip: {
         paddingVertical: 8,
         paddingHorizontal: 12,
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         borderRadius: 8,
     },
-    chipText: { color: '#fff', },
+    chipText: { color: Colors.text, },
     description: {
-        color: '#fff',
+        color: Colors.text,
         opacity: 0.5,
         fontSize: 14,
         lineHeight: 20,
@@ -174,12 +178,12 @@ const styles = StyleSheet.create({
     bg2: { backgroundColor: '#3C2C61', },
     btnText: {
         textAlign: 'center',
-        color: '#fff',
+        color: Colors.text,
         fontSize: 16,
         fontWeight: 'bold',
     },
     subtitle:{
-        color: '#fff',
+        color: Colors.text,
         opacity: 0.65,
         fontWeight: 'bold',
         marginTop: 16,

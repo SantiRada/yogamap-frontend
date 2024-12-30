@@ -1,5 +1,6 @@
 import { StyleSheet, View, Text, Pressable } from 'react-native';
 import { TitleRegister } from './TitleRegister';
+import useColors from '../../Colors';
 
 export function PayAndCommunityRegister({ reverse, advance, pay, setPay, community, setCommunity }) {
     const handlePay = (id) => {
@@ -11,7 +12,10 @@ export function PayAndCommunityRegister({ reverse, advance, pay, setPay, communi
             }
         });
     }
-
+    
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+    
     return (
         <View style={styles.container}>
             <TitleRegister func={reverse} texting="Imagen y Certificado" />
@@ -52,7 +56,7 @@ export function PayAndCommunityRegister({ reverse, advance, pay, setPay, communi
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',

@@ -1,6 +1,7 @@
 import { useLayoutEffect, useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import useColors from '../Colors'
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
@@ -27,11 +28,14 @@ export function Perfil({ navigation }){
         connectionUser();
     }, []);
 
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
+
     useLayoutEffect(() => {
         // Configurar opciones de navegación según la existencia de idprof en userInfo
         if (userInfo && userInfo.idprof) {
             navigation.setOptions({
-                headerStyle: { backgroundColor: '#1A122E' },
+                headerStyle: { backgroundColor: Colors.background },
                 headerTitleStyle: { color: '#E3D8FF' },
                 headerTintColor: '#E3D8FF',
                 headerRight: () => (
@@ -53,9 +57,9 @@ export function Perfil({ navigation }){
             });
         } else {
             navigation.setOptions({
-                headerStyle: { backgroundColor: '#1A122E' },
-                headerTitleStyle: { color: '#E3D8FF' },
-                headerTintColor: '#E3D8FF',
+                headerStyle: { backgroundColor: Colors.background },
+                headerTitleStyle: { color: Colors.text2 },
+                headerTintColor: Colors.text2,
                 headerRight: () => (
                     <MaterialIcons 
                         name="settings"
@@ -68,14 +72,17 @@ export function Perfil({ navigation }){
         }
     }, [navigation, userInfo]);
 
+
+
     return(
         <View style={styles.container}>
             <InfoUser id={id} />
 
             <Top.Navigator
                 screenOptions={{
+
                     tabBarStyle: {
-                        backgroundColor: '#1A122E',
+                        backgroundColor: Colors.background,
                         elevation: 0,
                         shadowOpacity: 0,
                     },
@@ -88,8 +95,8 @@ export function Perfil({ navigation }){
                         borderRadius: 8,
                         backgroundColor: '#3C2C61',
                     },
-                    tabBarActiveTintColor: '#fff',
-                    tabBarInactiveTintColor: '#ccc',
+                    tabBarActiveTintColor: Colors.text,
+                    tabBarInactiveTintColor: Colors.placeholder,
                     tabBarItemStyle:{ width: 130, },
                     tabBarScrollEnabled: true,
                 }}
@@ -102,19 +109,19 @@ export function Perfil({ navigation }){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
         padding: '4%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     iconLeft: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginLeft: 16,
     },
     iconRight: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginRight: 16,
     },
 });

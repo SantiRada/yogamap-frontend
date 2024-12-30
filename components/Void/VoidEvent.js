@@ -1,9 +1,13 @@
 import { StyleSheet, View, Text, Image } from 'react-native';
+import useColors from '../../Colors';
 
 export function VoidEvent({voidData}) {
 
     const title = voidData ? "Parece que no hay eventos de este tipo" : "Todo está demasiado tranquilo...";
     const description = voidData ? "Intenta buscar algo más general, como una ciudad" : "Se paciente y llegarán más eventos";
+
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
 
     return (
         <View style={styles.container}>
@@ -19,14 +23,14 @@ export function VoidEvent({voidData}) {
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         gap: 8,
         marginTop: 16,
     },
     title: {
         fontSize: 24,
-        color: '#fff',
+        color: "#fff",
         fontWeight: 'bold',
     },
     event: {
@@ -53,7 +57,7 @@ const styles = StyleSheet.create({
         left: 16,
     },
     eventTitle: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 18,
     },
     eventDesc: {

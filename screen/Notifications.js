@@ -14,7 +14,7 @@ export function TopTab() {
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/formacionesperprof.php', { id: getProfID() }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/formacionesperprof.php', { id: getProfID() }, { headers: { 'Content-Type': 'application/json' } });
                 
                 if (response.data.success) { setHasFormation(true); }
                 else { setHasFormation(false); }
@@ -77,7 +77,7 @@ export function Notifications() {
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',

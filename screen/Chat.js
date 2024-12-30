@@ -1,6 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { View, StyleSheet, Pressable, Text } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import useColors from '../Colors';
 
 import axios from 'axios';
 
@@ -11,10 +12,13 @@ import { profData } from './../ProfData';
 
 export function Chat({ navigation }){
 
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerStyle: { backgroundColor: '#1A122E' },
-            headerTitleStyle: { color: '#E3D8FF' },
+            headerStyle: { backgroundColor: Colors.background },
+            headerTitleStyle: { color: Colors.text2 },
             headerTintColor: '#E3D8FF',
             headerRight: () => (
                 <MaterialIcons 
@@ -58,7 +62,7 @@ export function Chat({ navigation }){
 
     const connection = async () => {
         try {
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/chats.php', { idUser }, { headers: { 'Content-Type': 'application/json' } });
+            const response = await axios.post('https://yogamap.com.ar/public/select/chats.php', { idUser }, { headers: { 'Content-Type': 'application/json' } });
         
             if (response.data.success) {
                 if (response.data.chats) { setData(response.data.chats); }
@@ -81,7 +85,7 @@ export function Chat({ navigation }){
     const createCommunity = async () => {
         try {
             console.log("ID: ", dataProf.id);
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/insert/community.php', 
+            const response = await axios.post('https://yogamap.com.ar/public/insert/community.php', 
                 { id: dataProf.id },
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -113,21 +117,21 @@ export function Chat({ navigation }){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         padding: '4%',
         flex: 1,
         gap: 16,
     },
     iconLeft: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginLeft: 16,
     },
     iconRight: {
-        color: '#E3D8FF',
+        color: Colors.headerIcons,
         marginRight: 16,
     },
     btn: {

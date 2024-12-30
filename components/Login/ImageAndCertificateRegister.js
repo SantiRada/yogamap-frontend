@@ -1,6 +1,7 @@
 import { StyleSheet, View, ScrollView, Text, Pressable, Image } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { TitleRegister } from './TitleRegister';
+import useColors from '../../Colors';
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -43,6 +44,9 @@ export function ImageAndCertificateRegister({ reverse, advance, image, setImage,
             console.log('Usuario canceló la selección de imagen');
         }
     };
+
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
 
     return (
         <View style={styles.container}>
@@ -102,11 +106,11 @@ export function ImageAndCertificateRegister({ reverse, advance, image, setImage,
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     question: {
         fontSize: 18,

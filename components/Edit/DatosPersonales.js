@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { profData } from '../../ProfData';
+import useColors from '../../Colors';
 
 export function DatosPersonales() {
     const [data, setData] = useState([]);
@@ -117,6 +118,9 @@ export function DatosPersonales() {
         }
     };
 
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
+
     return (
         <ScrollView style={styles.container}>
             <View style={styles.section}>
@@ -194,13 +198,13 @@ export function DatosPersonales() {
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         padding: '4%',
         paddingTop: 0,
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     section: {
         marginBottom: 16,
@@ -211,7 +215,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     input: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         padding: 8,
         paddingLeft: 24,
         color: '#fff',
@@ -219,7 +223,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    textInput: { color: '#ffffff50' },
+    textInput: { color: Colors.text },
     listChip: {
         width: '100%',
         flexDirection: 'row',

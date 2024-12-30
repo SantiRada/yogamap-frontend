@@ -5,6 +5,7 @@ import { getUserID } from './../UserData';
 import { ListProf } from './List/ListProf';
 import { ListEvent } from './List/ListEvent';
 import { useFocusEffect } from '@react-navigation/native';
+import useColors from '../Colors';
 
 export function Favs() {
     const id = getUserID();
@@ -13,7 +14,7 @@ export function Favs() {
 
     const fetchData = useCallback(async () => {
         try {
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/favs.php', { id }, { headers: { 'Content-Type': 'application/json' } });
+            const response = await axios.post('https://yogamap.com.ar/public/select/favs.php', { id }, { headers: { 'Content-Type': 'application/json' } });
             
             if (response.data.success && response.data.favs) {
                 const favProf = response.data.favs.favProf || '';
@@ -39,6 +40,9 @@ export function Favs() {
             fetchData();
         }, [fetchData])
     );
+
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
 
     return (
         <View style={styles.container}>
@@ -71,9 +75,9 @@ export function Favs() {
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles= (Colors) => StyleSheet.create({
     container: {
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         flex: 1,
     },
     voidFav: {
@@ -86,16 +90,17 @@ const styles = StyleSheet.create({
     image: {
         width: 150,
         height: 150,
+        marginTop:20,
         opacity: 0.75,
     },
     voidText: {
-        color: '#ffffff50',
+        color: Colors.placeholder,
         textAlign: 'center',
         fontSize: 16,
         padding: 16,
     },
     title: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 16,
         marginTop: 16,
         marginBottom: 8,

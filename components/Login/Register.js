@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View, TextInput, Text, Pressable, Image } from 'react-native';
+import { StyleSheet, View, TextInput, Text, Pressable, Image, TouchableOpacity, ScrollView } from 'react-native';
+import useColors from '../../Colors';
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 
@@ -22,7 +23,7 @@ export function Register({route}) {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post('http://192.168.100.2/API_Yogamap/public/insert/register.php', {
+      const response = await axios.post('https://yogamap.com.ar/public/insert/register.php', {
         mail,
         name,
         pass,
@@ -43,31 +44,33 @@ export function Register({route}) {
 
           if(type == "prof") { navigation.navigate('RegisterProf', { id: response.data.prof.id }); }
           else { navigation.navigate('TabGroup'); }
-      } else { setRegisterStatus(response.data.message); }
+      } else { setRegisterStatus(response.data); } //.message
     } catch (error) { console.error(error); }
   };
 
+  const Colors = useColors();
+  const styles = DynamicStyles(Colors);
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <TitleRegister texting="Tipo de Cuenta" link="Start" />
       {
         registerStatus != '' && 
           <View style={{padding: 16, width: '100%', borderRadius: 16, marginBottom: 16, marginTop: -16, justifyContent: 'center', backgroundColor: '#ffffff10', alignItems: 'center'}}>
-            <Text style={{color: '#fff', fontSize: 16, textAlign: 'center', }}>{registerStatus}</Text>
+            <Text style={{color: Colors.text, fontSize: 16, textAlign: 'center', }}>{registerStatus}</Text>
           </View>
       }
       <TextInput
           style={styles.input}
           placeholder="Correo electrónico"
-          placeholderTextColor="#ffffff50"
+          placeholderTextColor={Colors.placeholder}
           value={mail}
           onChangeText={setMail}
-          keyboardType="email-address"
       />
       <TextInput
           style={styles.input}
           placeholder="Nombre de Usuario"
-          placeholderTextColor="#ffffff50"
+          placeholderTextColor={Colors.placeholder}
           value={name}
           onChangeText={setName}
           keyboardType="name"
@@ -75,7 +78,7 @@ export function Register({route}) {
       <TextInput
           style={styles.input}
           placeholder="Contraseña"
-          placeholderTextColor="#ffffff50"
+          placeholderTextColor={Colors.placeholder}
           value={pass}
           onChangeText={setPass}
           secureTextEntry
@@ -83,30 +86,30 @@ export function Register({route}) {
       <TextInput
           style={styles.input}
           placeholder="Repetir Contraseña"
-          placeholderTextColor="#ffffff50"
+          placeholderTextColor={Colors.placeholder}
           value={twoPass}
           onChangeText={setTwoPass}
           secureTextEntry
       />
-      <Pressable style={styles.btn} onPress={handleRegister}>
-        <Text style={[styles.textBtn, styles.weight ]}>Registrarse</Text>
-      </Pressable>
-      <Pressable style={styles.btnBase}>
+      <TouchableOpacity style={styles.btn} onPress={handleRegister}>
+        <Text style={[styles.textBtn, styles.weight, {color:"white"} ]}>Registrarse</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.btnBase}>
         <Text style={styles.textBtn}>Registrarse con </Text>
-        <AntDesign name="google" size={24} color="#fff" />
-      </Pressable>
-      <Pressable style={styles.btnBase} onPress={ () => { navigation.navigate('Login', {type:type}) } }>
+        <AntDesign name="google" size={24} color={Colors.text} />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.btnBase} onPress={ () => { navigation.navigate('Login', {type:type}) } }>
         <Text style={styles.textBtn}>¿Ya tienes cuenta? <Text style={styles.weight}>Iniciar Sesión</Text></Text>
-      </Pressable>
-    </View>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    backgroundColor: '#1A122E',
+    backgroundColor: Colors.background,
     paddingHorizontal: '4%',
   },
   logo: {
@@ -130,10 +133,10 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   input: {
-    backgroundColor: '#3C2C61',
+    backgroundColor: Colors.inputBG,
     width: '100%',
     padding: 12,
-    color: '#fff',
+    color: Colors.text,
     borderRadius: 8,
     marginBottom: 12,
   },
@@ -158,7 +161,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textBtn: {
-    color: '#fff',
+    color: Colors.text,
     textAlign: 'center',
     fontSize: 16,
   },
