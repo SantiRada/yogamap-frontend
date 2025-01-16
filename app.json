@@ -18,16 +18,35 @@
       "backgroundColor": "#1A122E"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to show events near you."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1A122E"
+        "backgroundColor": "#1A122E",
+        "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+      },
+      "package": "com.jisuselpapi2.yogamap",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDkfuWwUibSaMiBj9rmYwRByeJlVlf8jQU"
+        },
+        "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
       }
     },
     "web": {
       "favicon": "./assets/adaptive-icon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "28b89d01-c892-474b-8b10-b8c4a397661d"
+      }
     }
   }
 }

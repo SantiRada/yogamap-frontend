@@ -1,9 +1,7 @@
 import { useLayoutEffect, useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import useColors from '../Colors'
-
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import useColors from '../Colors';
 
 import { InfoUser } from './../components/InfoUser';
 import { Favs } from './../components/Favs';
@@ -12,46 +10,44 @@ import { Disponibilidad } from './../components/Disponibilidad';
 
 import { getUserID, userData } from './../UserData';
 
-const Top = createMaterialTopTabNavigator();
-
-export function Perfil({ navigation }){
+export function Perfil({ navigation }) {
 
     const [userInfo, setUserInfo] = useState([]);
+    const [selectedTab, setSelectedTab] = useState('Favoritos'); // Estado para la pestaña seleccionada
     const id = getUserID();
 
     useEffect(() => {
         const connectionUser = async () => {
             const prevUser = await userData();
             setUserInfo(prevUser);
-        }
+        };
 
         connectionUser();
     }, []);
 
-    const Colors = useColors()
-    const styles = DynamicStyles(Colors)
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
 
     useLayoutEffect(() => {
-        // Configurar opciones de navegación según la existencia de idprof en userInfo
         if (userInfo && userInfo.idprof) {
             navigation.setOptions({
                 headerStyle: { backgroundColor: Colors.background },
-                headerTitleStyle: { color: '#E3D8FF' },
+                headerTitleStyle: { color: Colors.text2 },
                 headerTintColor: '#E3D8FF',
                 headerRight: () => (
-                    <MaterialIcons 
+                    <MaterialIcons
                         name="settings"
                         size={24}
-                        style={ styles.iconRight }
+                        style={styles.iconRight}
                         onPress={() => navigation.navigate('Configuración')}
                     />
                 ),
                 headerLeft: () => (
-                    <MaterialIcons 
+                    <MaterialIcons
                         name="edit"
                         size={24}
-                        style={ styles.iconLeft }
-                        onPress={() => navigation.navigate('EditProf', { id: userInfo.idprof }) }
+                        style={styles.iconLeft}
+                        onPress={() => navigation.navigate('EditProf', { id: userInfo.idprof })}
                     />
                 ),
             });
@@ -61,10 +57,10 @@ export function Perfil({ navigation }){
                 headerTitleStyle: { color: Colors.text2 },
                 headerTintColor: Colors.text2,
                 headerRight: () => (
-                    <MaterialIcons 
+                    <MaterialIcons
                         name="settings"
                         size={24}
-                        style={ styles.iconRight }
+                        style={styles.iconRight}
                         onPress={() => navigation.navigate('Configuración')}
                     />
                 ),
@@ -72,39 +68,40 @@ export function Perfil({ navigation }){
         }
     }, [navigation, userInfo]);
 
-
-
-    return(
+    return (
         <View style={styles.container}>
             <InfoUser id={id} />
 
-            <Top.Navigator
-                screenOptions={{
+            {/* Tabs */}
+            <View style={styles.tabContainer}>
+                <TouchableOpacity
+                    style={selectedTab === 'Favoritos' ? styles.activeTab : styles.inactiveTab}
+                    onPress={() => setSelectedTab('Favoritos')}
+                >
+                    <Text style={styles.tabText}>Favoritos</Text>
+                </TouchableOpacity>
+                {userInfo && userInfo.idprof && (
+                    <TouchableOpacity
+                        style={selectedTab === 'Tus Clases' ? styles.activeTab : styles.inactiveTab}
+                        onPress={() => setSelectedTab('Tus Clases')}
+                    >
+                        <Text style={styles.tabText}>Tus Clases</Text>
+                    </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                    style={selectedTab === 'Tus Horarios' ? styles.activeTab : styles.inactiveTab}
+                    onPress={() => setSelectedTab('Tus Horarios')}
+                >
+                    <Text style={styles.tabText}>Tus Horarios</Text>
+                </TouchableOpacity>
+            </View>
 
-                    tabBarStyle: {
-                        backgroundColor: Colors.background,
-                        elevation: 0,
-                        shadowOpacity: 0,
-                    },
-                    tabBarLabelStyle: {
-                        textTransform: 'capitalize',
-                        fontSize: 16,
-                    },
-                    tabBarIndicatorStyle: {
-                        height: 4,
-                        borderRadius: 8,
-                        backgroundColor: '#3C2C61',
-                    },
-                    tabBarActiveTintColor: Colors.text,
-                    tabBarInactiveTintColor: Colors.placeholder,
-                    tabBarItemStyle:{ width: 130, },
-                    tabBarScrollEnabled: true,
-                }}
-            >
-                <Top.Screen name="Favoritos" component={Favs} />
-                { userInfo && userInfo.idprof && <Top.Screen name="Tus Clases" component={Disponibilidad} /> }
-                <Top.Screen name="Tus Horarios" component={Times} />
-            </Top.Navigator>
+            {/* Tab Content */}
+            <ScrollView style={{ flexGrow: 1 }}  contentContainerStyle={{ flexGrow: 1 }}>
+                {selectedTab === 'Favoritos' && <Favs />}
+                {selectedTab === 'Tus Clases' && userInfo && userInfo.idprof && <Disponibilidad />}
+                {selectedTab === 'Tus Horarios' && <Times />}
+            </ScrollView>
         </View>
     );
 }
@@ -123,5 +120,29 @@ const DynamicStyles = (Colors) => StyleSheet.create({
     iconRight: {
         color: Colors.headerIcons,
         marginRight: 16,
+    },
+    tabContainer: {
+        flexDirection: 'row',
+        marginBottom: 16,
+        backgroundColor: Colors.background,
+    },
+    activeTab: {
+        flex: 1,
+        paddingHorizontal: 4,
+        justifyContent:"center",
+        alignItems: 'center',
+        borderBottomWidth: 4,
+        borderBottomColor: Colors.text,
+    },
+    inactiveTab: {
+        flex: 1,
+        padding: 12,
+        alignItems: 'center',
+        backgroundColor: Colors.background,
+    },
+    tabText: {
+        color: Colors.text,
+        fontSize: 16,
+        textTransform: 'capitalize',
     },
 });

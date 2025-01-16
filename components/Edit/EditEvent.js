@@ -2,6 +2,7 @@ import { useState, useLayoutEffect } from 'react';
 import { StyleSheet, View, ScrollView, Image, Pressable, Text, TextInput, Alert } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import axios from 'axios';
+import useColors from '../../Colors';
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -12,7 +13,10 @@ export function EditEvent({route}){
     const navigation = useNavigation();
     const [status, setStatus] = useState('');
 
-    const [imageURI, setImageURI] = useState("http://192.168.100.2/API_Yogamap/assets/events/" + data.img);
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
+
+    const [imageURI, setImageURI] = useState("https://yogamap.com.ar/assets/events/" + data.img);
     const [name, setName] = useState(data.name);
     const [theme, setTheme] = useState(data.theme);
     const [description, setDescription] = useState(data.description);
@@ -21,7 +25,7 @@ export function EditEvent({route}){
 
     const deleteEvent = async () => {
         try {
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/delete/remove.php', { id: data.id, type:'events' }, { headers: { 'Content-Type': 'application/json' } });
+            const response = await axios.post('https://yogamap.com.ar/public/delete/remove.php', { id: data.id, type:'events' }, { headers: { 'Content-Type': 'application/json' } });
         
             if (response.data.success) {
                 Alert.alert(
@@ -69,7 +73,7 @@ export function EditEvent({route}){
             formData.append('ubication', ubication);
     
             // Agrega la imagen solo si fue cambiada
-            if (imageURI !== `http://192.168.100.2/API_Yogamap/assets/events/${data.img}`) {
+            if (imageURI !== `https://yogamap.com.ar/assets/events/${data.img}`) {
                 const fileName = imageURI.split('/').pop();
                 formData.append('image', {
                     uri: imageURI,
@@ -79,7 +83,7 @@ export function EditEvent({route}){
             }
     
             const response = await axios.post(
-                'http://192.168.100.2/API_Yogamap/public/update/event.php',
+                'https://yogamap.com.ar/public/update/event.php',
                 formData,
                 {
                     headers: {
@@ -159,12 +163,12 @@ export function EditEvent({route}){
 
     return(
         <ScrollView style={styles.container}>
-            <Pressable style={{ position: 'relative' }} onPress={ pickImage }>
+            <Pressable style={{ position: 'relative', marginBottom:20 }} onPress={ pickImage }>
                 <Image source={{ uri: imageURI }} style={styles.image} />
                 <View style={styles.filter}>
                     <MaterialIcons style={styles.iconFilter} name="add" size={48} color='#fff' />
                 </View>
-                { (imageURI != ("http://192.168.100.2/API_Yogamap/assets/events/" + data.img) || name != data.name || theme != data.theme || description != data.description || horarios != data.horarios || ubication != data.ubication) &&
+                { (imageURI != ("https://yogamap.com.ar/assets/events/" + data.img) || name != data.name || theme != data.theme || description != data.description || horarios != data.horarios || ubication != data.ubication) &&
                     <Text style={styles.notSave}>Cambios sin Guardar</Text>
                 }
             </Pressable>
@@ -173,7 +177,7 @@ export function EditEvent({route}){
                     <Text style={styles.label}>Nombre del Evento</Text>
                     <TextInput
                         placeholder="Nombre del Evento"
-                        placeholderTextColor="#ffffff50"
+                        placeholderTextColor={Colors.placeholder}
                         style={styles.input}
                         onChangeText={(text) => {
                             console.log("Nombre actualizado a:", text);
@@ -185,7 +189,7 @@ export function EditEvent({route}){
                 <Text style={styles.label}>Temas del Evento</Text>
                 <TextInput
                     placeholder="Temas del Evento"
-                    placeholderTextColor="#ffffff50"
+                    placeholderTextColor={Colors.placeholder}
                     style={styles.input}
                     onChangeText={(text) => setTheme(text)}
                     value={theme}
@@ -193,7 +197,7 @@ export function EditEvent({route}){
                 <Text style={styles.label}>Descripción del Evento</Text>
                 <TextInput
                     placeholder="Descripción del evento"
-                    placeholderTextColor="#ffffff50"
+                    placeholderTextColor={Colors.placeholder}
                     multiline={true}
                     numberOfLines={10}
                     style={styles.textarea}
@@ -203,7 +207,7 @@ export function EditEvent({route}){
                 <Text style={styles.label}>Horario</Text>
                 <TextInput
                     placeholder="20:30 a 21:30"
-                    placeholderTextColor="#ffffff50"
+                    placeholderTextColor={Colors.placeholder}
                     style={styles.input}
                     onChangeText={(text) => setHorarios(text)}
                     value={horarios}
@@ -211,7 +215,7 @@ export function EditEvent({route}){
                 <Text style={styles.label}>Ubicación</Text>
                 <TextInput
                     placeholder="Ubicación"
-                    placeholderTextColor="#ffffff50"
+                    placeholderTextColor={Colors.placeholder}
                     style={styles.input}
                     onChangeText={(text) => setUbication(text)}
                     value={ubication}
@@ -227,20 +231,19 @@ export function EditEvent({route}){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         gap: 16,
     },
     iconRight: {
-        color: '#fff',
+        color: Colors.headerIcons,
     },
     image:{
         width: '100%',
         height: 220,
-        marginBottom: 16,
     },
     filter: {
         backgroundColor: '#00000050',
@@ -249,6 +252,7 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+        marginBottom:20,
     },
     iconFilter: {
         backgroundColor: '#1A122E',
@@ -271,22 +275,22 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
     },
     label: {
-        color: '#fff',
+        color: Colors.text,
         marginBottom: 8,
     },
     input: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         padding: 8,
         paddingLeft: 24,
-        color: '#fff',
+        color: Colors.text,
         borderRadius: 8,
         marginBottom: 16,
     },
     textarea: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         padding: 16,
         textAlignVertical: 'top',
-        color: '#fff',
+        color: Colors.text,
         borderRadius: 8,
         marginBottom: 16,
     },

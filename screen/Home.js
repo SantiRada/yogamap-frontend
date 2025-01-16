@@ -1,14 +1,11 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import { SearchBar } from './../components/SearchBar';
-
 import { StatsProf } from './../components/StatsProf';
 import { SliderEvent } from './../components/SliderEvent';
 import { SliderFormaciones } from './../components/SliderFormaciones';
-
 import { Banner } from './../components/Banner';
 import { TypesOfYoga } from './../components/TypesOfYoga';
 
@@ -16,24 +13,14 @@ import { userData } from './../UserData';
 import { profData } from './../ProfData';
 import useColors from '../Colors';
 
-import axios from 'axios';
-
-import { ListNotification } from '../components/List/ListNotification';
-import { useNavigation } from '@react-navigation/native';
-
-const Top = createMaterialTopTabNavigator();
-
 export function Home({ navigation }) {
-
-    const navi = useNavigation();
-    
     const [dataUser, setDataUser] = useState(null);
     const [dataProf, setDataProf] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [selectedTab, setSelectedTab] = useState('Mis Eventos'); // Estado para rastrear la pestaña seleccionada
 
-    // Función para cargar datos del usuario y, si es necesario, los del profesor
     const fetchData = async () => {
-        setLoading(true); // Indicamos que empieza a cargar
+        setLoading(true);
         try {
             const user = await userData();
             setDataUser(user);
@@ -42,20 +29,18 @@ export function Home({ navigation }) {
                 const prof = await profData();
                 setDataProf(prof);
             } else {
-                setDataProf(null); // Limpia los datos del profesor si no es profesor
+                setDataProf(null);
             }
         } catch (error) {
             console.error("Error fetching data", error);
         }
-        setLoading(false); // Terminamos de cargar
+        setLoading(false);
     };
 
-    // Ejecutamos fetchData cada vez que se monta el componente o cuando dataUser cambia
     useEffect(() => {
         fetchData();
     }, []);
 
-    // Configurar el header de navegación
     useLayoutEffect(() => {
         navigation.setOptions({
             title: 'Inicio',
@@ -78,10 +63,9 @@ export function Home({ navigation }) {
         });
     }, [navigation]);
 
-    const Colors = useColors()
-    const styles = DynamicStyles(Colors)
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
 
-    // Si está cargando, mostramos el indicador de carga
     if (loading) {
         return (
             <View style={styles.container}>
@@ -90,41 +74,35 @@ export function Home({ navigation }) {
         );
     }
 
-    // Renderizado condicional dependiendo si es profesor o no
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
             <SearchBar text="Buscar profe o Tipo de Yoga" />
             {dataUser?.idprof && dataProf ? (
                 <View style={styles.containProf}>
-                    <Top.Navigator
-                        screenOptions={{
-                            tabBarStyle: {
-                                backgroundColor: "'#1A122E'",
-                                elevation: 0,
-                                shadowOpacity: 0,
-                            },
-                            tabBarLabelStyle: {
-                                textTransform: 'capitalize',
-                                fontSize: 16,
-                            },
-                            tabBarIndicatorStyle: {
-                                height: 4,
-                                borderRadius: 8,
-                                backgroundColor: '#3C2C61',
-                            },
-                            tabBarActiveTintColor: Colors.text,
-                            tabBarInactiveTintColor: Colors.ligthText,
-                        }}
-                    >
-                        <Top.Screen name="Mis Eventos" component={SliderEvent} initialParams={{ idUser: dataUser.id, title: true }} />
-                        <Top.Screen name="Mis Formaciones" component={SliderFormaciones} initialParams={{ idProf: dataProf.id, title:true }} />
-                    </Top.Navigator>
+                    {/* Tabs */}
+                    <View style={styles.tabContainer}>
+                        <TouchableOpacity
+                            style={selectedTab === 'Mis Eventos' ? styles.activeTab : styles.inactiveTab}
+                            onPress={() => setSelectedTab('Mis Eventos')}
+                        >
+                            <Text style={styles.tabText}>Mis Eventos</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={selectedTab === 'Mis Formaciones' ? styles.activeTab : styles.inactiveTab}
+                            onPress={() => setSelectedTab('Mis Formaciones')}
+                        >
+                            <Text style={styles.tabText}>Mis Formaciones</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* Tab Content */}
+                    {selectedTab === 'Mis Eventos' && <SliderEvent idUser={dataUser.id} title={true} />}
+                    {selectedTab === 'Mis Formaciones' && <SliderFormaciones idProf={dataProf.id} title={true} />}
+
                     <StatsProf id={dataProf.id} />
                 </View>
             ) : (
                 <View style={{ gap: 16 }}>
-                    
-                    {/* <Pressable onPress={() => navi.navigate('Onboarding')}><Text>On</Text></Pressable> */}
                     <Banner />
                     <TypesOfYoga />
                 </View>
@@ -138,6 +116,7 @@ const DynamicStyles = (Colors) => StyleSheet.create({
         width: '100%',
         padding: '4%',
         backgroundColor: Colors.background,
+        zIndex: 0,
     },
     iconLeft: {
         marginLeft: 16,
@@ -154,6 +133,30 @@ const DynamicStyles = (Colors) => StyleSheet.create({
     },
     containProf: {
         width: '100%',
+        flexGrow: 1,
+        paddingBottom: 36,
+    },
+    tabContainer: {
+        flexDirection: 'row',
+        marginBottom: 16,
+        backgroundColor: Colors.background,
+    },
+    activeTab: {
         flex: 1,
-    }
+        padding: 12,
+        alignItems: 'center',
+        borderBottomWidth: 4,
+        borderBottomColor: Colors.text,
+    },
+    inactiveTab: {
+        flex: 1,
+        padding: 12,
+        alignItems: 'center',
+
+    },
+    tabText: {
+        color: Colors.text,
+        fontSize: 16,
+        textTransform: 'capitalize',
+    },
 });

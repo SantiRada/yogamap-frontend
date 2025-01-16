@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import useColors from '../../Colors';
 
-import { StyleSheet, View, ScrollView, Image, Pressable, Text, TextInput, Alert } from 'react-native';
+import { StyleSheet, View, ScrollView, Image, Text, TextInput, Alert, TouchableOpacity } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import * as ImagePicker from 'expo-image-picker';
@@ -12,7 +13,10 @@ export function CreateFormacion({ route }){
 
     const navigation = useNavigation();
 
-    const imageBase = "http://192.168.100.2/API_Yogamap/assets/firstformacion.png";
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
+
+    const imageBase = "https://yogamap.com.ar/assets/firstformacion.png";
     const [imageURI, setImageURI] = useState(imageBase);
 
     const [name, setName] = useState('');
@@ -84,7 +88,7 @@ export function CreateFormacion({ route }){
             console.log("FormData: ", formData);
 
             // Realiza la solicitud POST
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/insert/formacion.php', 
+            const response = await axios.post('https://yogamap.com.ar/public/insert/formacion.php', 
                 formData, { headers: { 'Content-Type': 'multipart/form-data' } }
             );
     
@@ -110,18 +114,18 @@ export function CreateFormacion({ route }){
 
     return(
         <ScrollView style={styles.container}>
-            <Pressable style={{ position: 'relative' }} onPress={ pickImage }>
+            <TouchableOpacity style={{ position: 'relative', marginBottom:20 }} onPress={ pickImage }>
                 <Image source={{ uri: imageURI }} style={styles.image} />
                 <View style={imageURI !== imageBase ? styles.edit : styles.filter}>
                     <MaterialIcons style={imageURI !== imageBase ? styles.iconEdit : styles.iconFilter} name={imageURI !== imageBase ? "edit" : "add"} color='#fff' />
                 </View>
-            </Pressable>
+            </TouchableOpacity>
             <View style={styles.content}>
                 <View style={styles.titleSector}>
                     <Text style={styles.label}>Nombre de la Formación</Text>
                     <TextInput
                         placeholder="Nombre de la Formación"
-                        placeholderTextColor="#ffffff50"
+                        placeholderTextColor={Colors.placeholder}
                         style={styles.input}
                         onChangeText={setName}
                         value={name}
@@ -130,7 +134,7 @@ export function CreateFormacion({ route }){
                 <Text style={styles.label}>Temas de la Formación</Text>
                 <TextInput
                     placeholder="Hatha Yoga, Acroyoga, Aromaterapia..."
-                    placeholderTextColor="#ffffff50"
+                    placeholderTextColor={Colors.placeholder}
                     style={styles.input}
                     onChangeText={setTheme}
                     value={theme}
@@ -138,7 +142,7 @@ export function CreateFormacion({ route }){
                 <Text style={styles.label}>Descripción de la Formación</Text>
                 <TextInput
                     placeholder="Descripción de la Formación"
-                    placeholderTextColor="#ffffff50"
+                    placeholderTextColor={Colors.placeholder}
                     multiline={true}
                     numberOfLines={12}
                     style={styles.textarea}
@@ -146,29 +150,28 @@ export function CreateFormacion({ route }){
                     value={description}
                 />
                 { status && <Text style={styles.status}>{status}</Text> }
-                <Pressable style={styles.btn} onPress={ () => saveData() }>
+                <TouchableOpacity style={styles.btn} onPress={ () => saveData() }>
                     <Text style={styles.btnText}>Crear Formación</Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         gap: 16,
     },
-    icon: { color: '#fff', },
+    icon: { color: Colors.headerIcons, },
     iconRight: {
-        color: '#fff',
+        color: Colors.headerIcon,
     },
     image:{
         width: '100%',
         height: 220,
-        marginBottom: 16,
     },
     filter: {
         backgroundColor: '#00000050',
@@ -189,7 +192,7 @@ const styles = StyleSheet.create({
         paddingRight:16,
     },
     iconFilter: {
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.inputBG,
         borderRadius: 16,
         paddingVertical: 8,
         paddingHorizontal: 16,
@@ -207,22 +210,22 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
     },
     label: {
-        color: '#fff',
+        color: Colors.text,
         marginBottom: 8,
     },
     input: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         padding: 8,
         paddingLeft: 24,
-        color: '#fff',
+        color: Colors.text,
         borderRadius: 8,
         marginBottom: 16,
     },
     textarea: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         padding: 16,
         textAlignVertical: 'top',
-        color: '#fff',
+        color: Colors.text,
         borderRadius: 8,
         marginBottom: 16,
     },
@@ -230,6 +233,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#8C5BFF',
         borderRadius: 16,
         padding: 16,
+        marginTop: 24,
         marginBottom: 24,
     },
     btnText: {

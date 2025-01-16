@@ -2,13 +2,14 @@ import { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, View, FlatList, Pressable, Text, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import useColors from '../Colors';
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { apiAxios } from './../AxiosAPI';
 
-export function SliderFormaciones({ route }) {
-    const { idProf, title } = route.params;
+export function SliderFormaciones({ idProf, title }) {
+
     const navigation = useNavigation();
 
     const DATA = [
@@ -19,6 +20,9 @@ export function SliderFormaciones({ route }) {
             img: "../firstformacion.png",
         },
     ];
+
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
 
     const [data, setData] = useState(DATA);
 
@@ -44,9 +48,9 @@ export function SliderFormaciones({ route }) {
         }, [idProf]),
     );
 
-    const renderItem = ({ item }) => (
+    const RenderItem = ({ item }) => (
         <Pressable onPress={ () => { item.id == 0 ? navigation.navigate('CreateFormacion', { id: idProf }) : navigation.navigate('ShowFormacion', { id: item.id, idProf: idProf }); } } style={styles.event}>
-            <Image source={{ uri: 'http://192.168.100.2/API_Yogamap/assets/formaciones/' + item.img }} style={styles.eventImage} />
+            <Image source={{ uri: 'https://yogamap.com.ar/assets/formaciones/' + item.img }} style={styles.eventImage} />
             <View style={styles.filter}></View>
             <View style={styles.spaceText}>
                 <Text style={styles.eventTitle}>{item.title}</Text>
@@ -57,32 +61,27 @@ export function SliderFormaciones({ route }) {
 
     return (
         <View style={styles.container}>
+
             { title &&
                 <View style={styles.titleContent}>
                     <Text style={styles.title}>Mis Formaciones</Text>
+                
                     <MaterialIcons name="add" size={24} color="#fff" onPress={ () => navigation.navigate('CreateFormacion', { id:idProf }) } />
                 </View>
             }
             <View style={styles.listEvent}>
-                <FlatList
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    snapToAlignment="center"
-                    snapToInterval={350}
-                    decelerationRate="fast"
-                />
+                {data.map((item) => (
+                    <RenderItem item={item}/>
+                ))}
             </View>
         </View>
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         gap: 8,
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         width: '100%',
         flex: 1,
     },
@@ -95,14 +94,14 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 18,
-        color: '#fff',
+        color: Colors.text,
         fontWeight: 'bold',
     },
-    listEvent: { marginTop: 8 },
+
     event: {
-        position: 'relative',
-        width: 350,
-        marginRight: 8,
+        marginBottom:20,
+        borderRadius:15,
+        overflow: 'hidden',
     },
     eventImage: {
         width: '100%',

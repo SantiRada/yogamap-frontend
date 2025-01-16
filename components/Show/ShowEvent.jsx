@@ -1,9 +1,11 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { StyleSheet, View, ScrollView, Image, Pressable, Text } from 'react-native';
+import { StyleSheet, View, ScrollView, Image, Pressable, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import useColors from '../../Colors';
+import { ShowEventLocation } from './ShowEventLocation';
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import axios from 'axios';
 
@@ -19,7 +21,9 @@ export function ShowEvent({ route }){
     const navigation = useNavigation();
 
     const [data, setData] = useState([]);
+    const [open, setOpen] = useState(false)
     const [countAssist, setCountAssit] = useState(0);
+    const [location, setLocation] = useState("")
 
     // FUNCIONAMIENTO DE LA ASISTENCIA
     const [asistire, setAsistire] = useState(false);
@@ -31,7 +35,7 @@ export function ShowEvent({ route }){
 
     const changeAssist = async () => {
         try {
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/asistencia.php', { id, idUser }, { headers: { 'Content-Type': 'application/json' } });
+            const response = await axios.post('https://yogamap.com.ar/public/select/unique/asistencia.php', { id, idUser }, { headers: { 'Content-Type': 'application/json' } });
         
             if (response.data.success) { console.log("Asistencia marcada para el usuario: " + idUser); }
             else { console.log("Falló el marcador de asistencia para el usuario: " + response.data.message); }
@@ -43,11 +47,11 @@ export function ShowEvent({ route }){
     useEffect(() => {
         const connectionEvent = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/event.php', { id }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/unique/event.php', { id }, { headers: { 'Content-Type': 'application/json' } });
             
                 if (response.data.success) {
                     setData(response.data.event[0]);
-
+                    setLocation(JSON.parse(response?.data?.event[0]?.ubication))
                     if (response.data.event[0].asistencia && response.data.event[0].asistencia.length > 0) {
                         if(response.data.event[0].asistencia.includes(idUser.toString())) { setAsistire(true); }
 
@@ -65,6 +69,7 @@ export function ShowEvent({ route }){
     
         connectionEvent();
     }, [id, idUser, countAssist]);
+    
     
     const Colors = useColors();
     const styles = DynamicStyles(Colors);
@@ -90,9 +95,11 @@ export function ShowEvent({ route }){
         }
     }, [data, idProf, navigation, id]);
 
+
+
     return(
         <ScrollView style={styles.container}>
-            <Image source={{ uri: "http://192.168.100.2/API_Yogamap/assets/events/" + data.img }} style={styles.image} />
+            <Image source={{ uri: "https://yogamap.com.ar/assets/events/" + data.img }} style={styles.image} />
             <View style={styles.content}>
                 <Text style={styles.title}>{data.name}</Text>
                 <View style={styles.listChip}>
@@ -106,8 +113,18 @@ export function ShowEvent({ route }){
                 <Text style={styles.title}>Ubicación y Horarios</Text>
                 <View style={styles.listChip}>
                     <Text style={[styles.chip, { color: Colors.text, } ]}>{data.horarios}</Text>
-                    <Text style={[styles.chip, { color: Colors.text, } ]}>{data.ubication}</Text>
+                    <View>
+                        <Text style={[styles.chip, { color: Colors.text, } ]}>{location.description}</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => setOpen(!open)} style={{marginLeft:10}}>
+                        <AntDesign name={!open?"caretdown":"caretup"} size={17} color={Colors.text} />
+                    </TouchableOpacity>
                 </View>
+                
+                {open && (
+                    <ShowEventLocation location={location}/>
+                )}
+                
                 { (idProf != null && idProf == data.idorg) ? 
                     (
                         <View style={[styles.btn, styles.bg2]}>
@@ -175,7 +192,7 @@ const DynamicStyles = (Colors) => StyleSheet.create({
         padding: 16,
     },
     bg1: { backgroundColor: '#8C5BFF', },
-    bg2: { backgroundColor: '#3C2C61', },
+    bg2: { backgroundColor: Colors.inputBG, },
     btnText: {
         textAlign: 'center',
         color: Colors.text,

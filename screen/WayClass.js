@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, ScrollView, View, Pressable, Text, Alert } from 'react-native';
+import useColors from '../Colors';
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import axios from 'axios';
@@ -12,6 +13,9 @@ import { getUserID } from '../UserData';
 export function WayClass({ route }){
     const { id, horario, types } = route.params;
     const navigation = useNavigation();
+
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
 
     const [space, setSpace] = useState(0);
 
@@ -41,7 +45,9 @@ export function WayClass({ route }){
             try {
                 const response = await axios.post('https://yogamap.com.ar/public/select/unique/typeofyogaperprof.php', { id: id });
 
-                if (response.data.success) { setTypesArray(response.data.types); }
+                if (response.data.types && response.data.success) {
+                    setTypesArray(response.data.types); 
+                }
                 else { setTypesArray([]); console.log("Warning: ", response.data.message); }
             } catch (error) { console.log("ERROR: ", error); }
         }
@@ -167,15 +173,18 @@ export function WayClass({ route }){
     
     const days = [ "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" ];
 
+    console.log(allHorarios)
+    console.log(typesArray)
+
     return(
         <ScrollView style={styles.container}>
-            <Text style={{color: '#fff', opacity: 0.5, fontSize: 12, marginBottom: 8, marginLeft: 16}}>Estas por contactar con</Text>
+            <Text style={{color: Colors.text, opacity: 0.5, fontSize: 12, marginBottom: 8, marginLeft: 16}}>Estas por contactar con</Text>
             <InfoProf size="min" id={id} />
             <View style={[styles.spaces, {marginTop: 16}]}>
 
                 <Pressable style={styles.dropdown} onPress={handleVisibleTypeData}>
                     <Text style={styles.dropdownText}>{(typeData != "" ? typeData : "¿Qué estás buscando?")}</Text>
-                    <MaterialIcons name={(visibleData ? "keyboard-arrow-up" : "keyboard-arrow-right")} size={24} color='#fff' />
+                    <MaterialIcons name={(visibleData ? "keyboard-arrow-up" : "keyboard-arrow-right")} size={24} color={Colors.text} />
                 </Pressable>
                 { visibleData &&
                     <View style={styles.desplegable}>
@@ -193,7 +202,7 @@ export function WayClass({ route }){
                 <View style={styles.spaces}>
                     <Pressable style={styles.dropdown} onPress={handleVisibleTypesYoga}>
                         <Text style={styles.dropdownText}>{(typeYoga != "" ? ("Tipo: " + typeYoga) : "¿Qué tipo de Yoga te interesa?")}</Text>
-                        <MaterialIcons name={(visibleYoga ? "keyboard-arrow-up" : "keyboard-arrow-right")} size={24} color='#fff' />
+                        <MaterialIcons name={(visibleYoga ? "keyboard-arrow-up" : "keyboard-arrow-right")} size={24} color={Colors.text} />
                     </Pressable>
                     {visibleYoga &&
                         <View style={styles.desplegable}>
@@ -209,7 +218,7 @@ export function WayClass({ route }){
                 <View>
                     <Pressable style={styles.dropdown} onPress={ handleVisibleFormaciones }>
                         <Text style={styles.dropdownText}>{(formaciones != "" ? formaciones : "¿Qué formación te interesa?")}</Text>
-                        <MaterialIcons name={(visibleFormaciones ? "keyboard-arrow-up" : "keyboard-arrow-right")} size={24} color='#fff' />
+                        <MaterialIcons name={(visibleFormaciones ? "keyboard-arrow-up" : "keyboard-arrow-right")} size={24} color={Colors.text} />
                     </Pressable>
                     { visibleFormaciones && <SliderFormaciones selectFormaciones={ selectFormaciones } /> }
                 </View>
@@ -218,7 +227,7 @@ export function WayClass({ route }){
                 <View style={styles.spaces}>
                     <Pressable style={styles.dropdown} onPress={ handleVisibleHorarios }>
                         <Text style={styles.dropdownText}>{(horarios != "" ? "Horarios Seleccionados" : "¿Qué horario te queda cómodo?")}</Text>
-                        <MaterialIcons name={(visibleHorarios ? "keyboard-arrow-up" : "keyboard-arrow-right")} size={24} color='#fff' />
+                        <MaterialIcons name={(visibleHorarios ? "keyboard-arrow-up" : "keyboard-arrow-right")} size={24} color={Colors.text} />
                     </Pressable>
                     {visibleHorarios &&
                         <View style={styles.listTimes}>
@@ -228,7 +237,7 @@ export function WayClass({ route }){
                                         allHorarios.map((item,index) => {
                                             return (
                                             <>
-                                                <Text style={{paddingTop:8,color: '#fff'}}>{allHorarios[days[item.day]]}</Text>
+                                                <Text style={{paddingTop:8,color: Colors.text}}>{allHorarios[days[item.day]]}</Text>
                                                 <View style={styles.dataTimes}>
                                                     <Pressable key={item.day + "/" + index} style={selected && styles.bg1} onPress={() => { selectHorarios(item.id) }}>
                                                         <Text style={styles.time}>{item.horas}</Text>
@@ -239,7 +248,7 @@ export function WayClass({ route }){
                                     }
                                 </View>
                             ) : (
-                                <Text style={{color: '#fff', textAlign:'center', paddingVertical: 16}}>No hay horarios disponibles.</Text>
+                                <Text style={{color: Colors.text, textAlign:'center', paddingVertical: 16}}>No hay horarios disponibles.</Text>
                             )}
                         </View>
                     }
@@ -259,10 +268,10 @@ const DynamicStyles = (Colors) => StyleSheet.create({
         width: '100%',
         padding: '4%',
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
     },
     dropdown: {
-        borderBottomColor: '#3C2C61',
+        borderBottomColor: Colors.inputBG,
         borderBottomWidth: 1,
         paddingVertical: 16,
         paddingHorizontal: 8,
@@ -271,19 +280,19 @@ const DynamicStyles = (Colors) => StyleSheet.create({
         alignItems: 'center',
     },
     dropdownText: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 18,
     },
     desplegable: {
-        borderBottomColor: '#3C2C61',
+        borderBottomColor: Colors.inputBG,
         borderBottomWidth: 1,
         paddingVertical: 16,
         gap: 16,
     },
     itemText: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 16,
-        backgroundColor: '#ffffff10',
+        backgroundColor: Colors.inputBG,
         padding: 16,
         borderRadius: 16,
     },
@@ -291,16 +300,16 @@ const DynamicStyles = (Colors) => StyleSheet.create({
         width: '100%',
         paddingHorizontal: 16,
         paddingVertical: 12,
-        borderBottomColor: '#ffffff20',
+        borderBottomColor: Colors.inputBG,
         borderBottomWidth: 1,
     },
     option: {
-        color: '#aaa',
+        color: Colors.ligthText,
         fontSize: 16,
         marginRight: 24,
     },
     select: {
-        color: '#fff',
+        color: Colors.text,
     },
     dataTimes: {
         width: '100%',
@@ -312,8 +321,8 @@ const DynamicStyles = (Colors) => StyleSheet.create({
     time: {
         paddingVertical: 8,
         paddingHorizontal: 16,
-        color: '#fff',
-        backgroundColor: '#ffffff20',
+        color: Colors.text,
+        backgroundColor: Colors.ligthText,
         borderRadius: 8,
     },
     bg1:{

@@ -11,6 +11,7 @@ import { Buscar } from './screen/Buscar';
 import { Eventos } from './screen/Eventos';
 import { Chat } from './screen/Chat';
 import { Perfil } from './screen/Perfil';
+import { Map } from './screen/Map'
 
 import { Notifications } from './screen/Notifications';
 import { Configuration } from './screen/Configuration';
@@ -117,6 +118,13 @@ function StackGroup(){
                     lazy: false,
                     animation: 'slide_from_right',
                 })}
+            />
+            <Stack.Screen
+                name="Map"
+                component={Map}
+                options={{
+                    headerShown: false,
+                }}
             />
             <Stack.Screen
                 name="Login"

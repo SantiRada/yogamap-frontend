@@ -29,6 +29,7 @@ export function FeedEvent({ dataEvent }){
                             <FavItems id={item.id} type="event" />
                         </View>
                         <View style={styles.sectorImg}>
+                            {console.log(item.image)}
                             <Image source={{ uri: "https://yogamap.com.ar/assets/events/" + item.image }} style={styles.imgEvent} />
                             <View style={styles.filter}></View>
                             <View style={styles.sectorText}>

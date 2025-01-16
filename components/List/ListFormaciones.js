@@ -12,7 +12,7 @@ export function ListFormaciones({ search, count, stateTypeClass }){
             title: "No hay formaciones disponibles",
             description: "¡Dentro de poco se estarán sumando!",
             chips: '',
-            img: "http://192.168.100.2/API_Yogamap/assets/firstevent.png",
+            img: "https://yogamap.com.ar/assets/firstevent.png",
         }
     ]
 
@@ -22,7 +22,7 @@ export function ListFormaciones({ search, count, stateTypeClass }){
     useEffect(() => {
         const connectionFormaciones = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/formaciones.php', { search, count, stateTypeClass }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/formaciones.php', { search, count, stateTypeClass }, { headers: { 'Content-Type': 'application/json' } });
             
                 if (response.data.success) {
                     if(response.data.formaciones){
@@ -51,7 +51,7 @@ export function ListFormaciones({ search, count, stateTypeClass }){
             {
                 data.map((item, index) => (
                     <Pressable key={index} style={ styles.event } onPress={ () => { clicFormacion(item.id) } }>
-                        <Image source={{ uri: item.img }} style={styles.eventImage} />
+                        <Image source={{ uri: "https://yogamap.com.ar/assets/formaciones/" + item.image }} style={styles.eventImage} />
                         <View style={styles.filter}></View>
                         <View style={styles.spaceText}>
                             <Text style={styles.eventTitle}>{item.title}</Text>

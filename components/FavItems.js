@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Pressable } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import useColors from '../Colors';
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
@@ -51,10 +52,11 @@ export function FavItems({ id, type }){
     };
 
     const iconName = fav ? "star" : "star-border";
+    const Colors = useColors()
 
     return(
         <Pressable onPress={ () => { handleFav(); } }>
-            <MaterialIcons name={iconName} size={24} color='#fff' />
+            <MaterialIcons name={iconName} size={24} color={Colors.text} />
         </Pressable>
     );
 }
