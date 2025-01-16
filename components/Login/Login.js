@@ -20,6 +20,7 @@ export function Login({route}) {
 
   const handleLogin = async () => {
     try {
+      console.log("mail: " + mail + " pass: " + pass )
       const response = await axios.post('https://yogamap.com.ar/public/select/login.php', {
         mail,
         pass,

@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import useColors from '../Colors';
 
 export function InfoProf({id, size}){
 
     const navigation = useNavigation();
     const [data, setData] = useState([]);
+
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
 
     useEffect(() => {
         const connection = async () => {
@@ -36,7 +40,7 @@ export function InfoProf({id, size}){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     stats: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -56,11 +60,11 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#fff',
+        color: Colors.text,
     },
     desc: {
         fontSize: 14,
-        color: '#fff',
+        color: Colors.text,
         opacity: 0.5,
     },
 });

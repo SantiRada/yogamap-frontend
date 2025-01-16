@@ -5,6 +5,7 @@ import { StyleSheet, View, Pressable, Text, Image } from 'react-native';
 import axios from 'axios';
 // import { getUserID } from './../../UserData';
 import { FavItems } from './../FavItems';
+import useColors from '../../Colors';
 
 export function ListProf({ count, id }){
 
@@ -12,18 +13,21 @@ export function ListProf({ count, id }){
     const [data, setData] = useState([]);
     // const idUser = getUserID();
 
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
+
     useEffect(() => {
         const connectionProfs = async () => {
             if(id) {
                 try {
-                    const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/prof.php', { id }, { headers: { 'Content-Type': 'application/json' } });
+                    const response = await axios.post('https://yogamap.com.ar/public/select/unique/prof.php', { id }, { headers: { 'Content-Type': 'application/json' } });
                 
                     if (response.data.success) { setData(response.data.prof); }
                     else { console.log("Falló la carga del profe...", response.data.message); }
                   } catch (error) { console.log("Falló la conexión al servidor al intentar recuperar el perfil de id " + id + "..." + error); }
             } else {
                 try {
-                    const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/prof.php', { count }, { headers: { 'Content-Type': 'application/json' } });
+                    const response = await axios.post('https://yogamap.com.ar/public/select/unique/prof.php', { count }, { headers: { 'Content-Type': 'application/json' } });
                 
                     if (response.data.success) {
                         if(response.data.prof) { setData(response.data.prof); }
@@ -47,7 +51,7 @@ export function ListProf({ count, id }){
                     <Image
                         style={styles.image}
                         source={{
-                        uri: prof.icon ? ('http://192.168.100.2/API_Yogamap/assets/prof/' + prof.icon) : "http://192.168.100.2/API_Yogamap/assets/icon.png",
+                        uri: prof.icon ? ('https://yogamap.com.ar/assets/prof/' + prof.icon) : "https://yogamap.com.ar/assets/icon.png",
                         }}
                     />
                     <View style={styles.spaceText}>
@@ -64,7 +68,7 @@ export function ListProf({ count, id }){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         position: 'relative',
         gap: 8,
@@ -74,22 +78,26 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderRadius: 12,
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
     },
-    containProf: { flexDirection: 'row', },
+    containProf: { 
+        flexDirection: 'row',
+        alignItems:"center",
+        paddingHorizontal:"10"
+    },
     image: {
-        width: 70,
-        height: 70,
+        width: 50,
+        height: 50,
         borderTopLeftRadius: 12,
         borderBottomLeftRadius: 12,
     },
     spaceText: { padding: 16, },
-    name: { color: '#fff', },
-    types: { color: '#ffffff60', },
+    name: { color: Colors.text, },
+    types: { color: Colors.placeholder, },
     icon: {
         position: 'absolute',
         top: 22,
         right: 16,
-        color: '#fff',
+        color: Colors.headerIcons,
     },
 });

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import useColors from '../../Colors';
 
-import { StyleSheet, View, ScrollView, Image, Pressable, Text, TextInput, Alert } from 'react-native';
+import { StyleSheet, View, ScrollView, Image, Text, TextInput, Alert, TouchableOpacity, FlatList } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import * as ImagePicker from 'expo-image-picker';
@@ -10,9 +11,27 @@ import * as ImagePicker from 'expo-image-picker';
 export function CreateEvent({ route }){
     const { id } = route.params;
 
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors)
     const navigation = useNavigation();
 
-    const imageBase = "http://192.168.100.2/API_Yogamap/assets/firstevent.png";
+    const [location, setLocation] = useState(
+        {
+          description: "Playa El Morro, Anzoátegui, Venezuela",
+          place_id: "playa_el_morro_anzoategui",
+          geometry: {
+            location: {
+              lat: 10.191726, // Coordenada aproximada de Playa El Morro
+              lng: -64.681238,
+            },
+          },
+        }
+      );
+      
+
+    const [suggestions, setSuggestions] = useState([]); 
+
+    const imageBase = "https://yogamap.com.ar/assets/firstevent.png";
     const [imageURI, setImageURI] = useState(imageBase);
 
     const [name, setName] = useState('');
@@ -43,6 +62,8 @@ export function CreateEvent({ route }){
         });
 
         if (!result.canceled) {
+            const fileName = imageURI.split('/').pop();
+            console.log(fileName)
             setImageURI(result.assets[0].uri);
         } else {
             console.log('Usuario canceló la selección de imagen');
@@ -74,7 +95,7 @@ export function CreateEvent({ route }){
             formData.append('theme', theme);
             formData.append('description', description);
             formData.append('horarios', horarios);
-            formData.append('ubication', ubication);
+            formData.append('ubication', JSON.stringify(location));
             
             if (imageURI !== imageBase) {
                 const fileName = imageURI.split('/').pop();
@@ -86,7 +107,7 @@ export function CreateEvent({ route }){
             }
 
             // Realiza la solicitud POST
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/insert/event.php', 
+            const response = await axios.post('https://yogamap.com.ar/public/insert/event.php', 
                 formData,
                 {
                     headers: {
@@ -115,20 +136,69 @@ export function CreateEvent({ route }){
         }
     };
 
+     const googleAPIKey = "AIzaSyDkfuWwUibSaMiBj9rmYwRByeJlVlf8jQU"
+
+      const fetchSuggestions = async (query) => {
+        if (!query) {
+          setSuggestions([]); // Si el input está vacío, no mostramos sugerencias
+          return;
+        }
+    
+        try {
+          const response = await axios.get(
+            `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${googleAPIKey}&language=es`
+          );
+          console.log(response.data)
+          if (response.data.status === 'OK') {
+            setSuggestions(response.data.predictions); // Guardamos las sugerencias obtenidas
+          } else {
+            setSuggestions([]);
+          }
+        } catch (error) {
+          console.error(error);
+          Alert.alert('Error', 'Hubo un problema al obtener las sugerencias.');
+        }
+      };
+    
+      // Función para seleccionar una ubicación y obtener las coordenadas
+      const selectLocation = async (placeId) => {
+        try {
+          const response = await axios.get(
+            `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${googleAPIKey}`
+          );
+    
+          const location = response.data.result.geometry.location;
+          const { lat, lng } = location;
+    
+          // Almacenamos la ubicación seleccionada en el contexto
+          setLocation({
+            latitude: lat,
+            longitude: lng,
+            address: response.data.result.formatted_address,
+          });
+    
+          // Navegamos a la pantalla del mapa
+          navigation.navigate('MapScreen');
+        } catch (error) {
+          console.error(error);
+          Alert.alert('Error', 'Hubo un problema al obtener los detalles de la ubicación.');
+        }
+      };
+
     return(
         <ScrollView style={styles.container}>
-            <Pressable style={{ position: 'relative' }} onPress={ pickImage }>
+            <TouchableOpacity style={{ position: 'relative', marginBottom:20 }} onPress={ pickImage }>
                 <Image source={{ uri: imageURI }} style={styles.image} />
                 <View style={imageURI !== imageBase ? styles.edit : styles.filter}>
                     <MaterialIcons style={imageURI !== imageBase ? styles.iconEdit : styles.iconFilter} name={imageURI !== imageBase ? "edit" : "add"} color='#fff' />
                 </View>
-            </Pressable>
+            </TouchableOpacity>
             <View style={styles.content}>
                 <View style={styles.titleSector}>
                     <Text style={styles.label}>Nombre del Evento</Text>
                     <TextInput
                         placeholder="Nombre del Evento"
-                        placeholderTextColor="#ffffff50"
+                        placeholderTextColor={Colors.placeholder}
                         style={styles.input}
                         onChangeText={setName}
                         value={name}
@@ -137,7 +207,7 @@ export function CreateEvent({ route }){
                 <Text style={styles.label}>Temas del Evento</Text>
                 <TextInput
                     placeholder="Temas del Evento"
-                    placeholderTextColor="#ffffff50"
+                    placeholderTextColor={Colors.placeholder}
                     style={styles.input}
                     onChangeText={setTheme}
                     value={theme}
@@ -145,7 +215,7 @@ export function CreateEvent({ route }){
                 <Text style={styles.label}>Descripción del Evento</Text>
                 <TextInput
                     placeholder="Descripción del evento"
-                    placeholderTextColor="#ffffff50"
+                    placeholderTextColor={Colors.placeholder}
                     multiline={true}
                     numberOfLines={10}
                     style={styles.textarea}
@@ -155,7 +225,7 @@ export function CreateEvent({ route }){
                 <Text style={styles.label}>Horario</Text>
                 <TextInput
                     placeholder="20:30 a 21:30"
-                    placeholderTextColor="#ffffff50"
+                    placeholderTextColor={Colors.placeholder}
                     style={styles.input}
                     onChangeText={setHorarios}
                     value={horarios}
@@ -163,35 +233,68 @@ export function CreateEvent({ route }){
                 <Text style={styles.label}>Ubicación</Text>
                 <TextInput
                     placeholder="Ubicación"
-                    placeholderTextColor="#ffffff50"
+                    placeholderTextColor={Colors.placeholder}
                     style={styles.input}
-                    onChangeText={setUbication}
+                    onChangeText={(text) => {
+                        setUbication(text);
+                        fetchSuggestions(text); // Obtener sugerencias cuando el texto cambia
+                      }}
                     value={ubication}
                 />
+                {suggestions.length > 0 ? (
+                      <FlatList
+                        data={suggestions}
+                        keyExtractor={(item) => item.place_id}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity
+                            style={styles.suggestionItem}
+                            onPress={() => selectLocation(item.place_id)}
+                          >
+                            <Text style={styles.suggestionText}>{item.description}</Text>
+                          </TouchableOpacity>
+                        )}
+                      />
+                    ):(
+                        <>
+                        {ubication.length > 0 && (
+                            <View style={{backgroundColor:"#00000005", paddingHorizontal:10, paddingVertical:5}} >
+                              <Text style={styles.suggestionText}>no se encontro ninguna sugerencia</Text>
+                            </View>
+                        )}
+                        </>
+                    )}
                 { status && <Text style={styles.status}>{status}</Text> }
-                <Pressable style={styles.btn} onPress={ () => saveData() }>
+                <TouchableOpacity style={styles.btn} onPress={ () => saveData() }>
                     <Text style={styles.btnText}>Crear Evento</Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         gap: 16,
     },
-    icon: { color: '#fff', },
+    suggestionItem: {
+        backgroundColor:"#00000005",
+        paddingHorizontal:10,
+        paddingVertical:5,
+        borderBottomColor:Colors.placeholder
+    },
+    suggestionText: {
+        color:Colors.text
+    },
+    icon: { color: Colors.headerIcons, },
     iconRight: {
-        color: '#fff',
+        color: Colors.headerIcons,
     },
     image:{
         width: '100%',
         height: 220,
-        marginBottom: 16,
     },
     filter: {
         backgroundColor: '#00000050',
@@ -212,7 +315,7 @@ const styles = StyleSheet.create({
         paddingRight:16,
     },
     iconFilter: {
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.inputBG,
         borderRadius: 16,
         paddingVertical: 8,
         paddingHorizontal: 16,
@@ -230,22 +333,22 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
     },
     label: {
-        color: '#fff',
+        color: Colors.text,
         marginBottom: 8,
     },
     input: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         padding: 8,
         paddingLeft: 24,
-        color: '#fff',
+        color: Colors.text,
         borderRadius: 8,
         marginBottom: 16,
     },
     textarea: {
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         padding: 16,
         textAlignVertical: 'top',
-        color: '#fff',
+        color: Colors.text,
         borderRadius: 8,
         marginBottom: 16,
     },
@@ -253,6 +356,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#8C5BFF',
         borderRadius: 16,
         padding: 16,
+        marginTop: 16,
         marginBottom: 24,
     },
     btnText: {

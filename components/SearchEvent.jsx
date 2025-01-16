@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import useColors from '../Colors';
+import { useNavigation } from '@react-navigation/native';
 
 import axios from 'axios';
 
 export function SearchEvent({setData, setHasSearch}){
 
     const [search, setSearchInput] = useState('');
+    const navigation = useNavigation()
 
     const Colors = useColors()
     const style = DynamicStyles(Colors);
@@ -35,7 +37,7 @@ export function SearchEvent({setData, setHasSearch}){
     }
 
     return(
-        <View>
+        <View style={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
             <View style={style.inputBig}>
                 <MaterialIcons style={style.icon} name="search" size={24} />
                 <TextInput
@@ -48,6 +50,11 @@ export function SearchEvent({setData, setHasSearch}){
                     returnKeyType="Buscar"
                 />
             </View>
+            <TouchableOpacity
+                onPress={() => navigation.navigate("Map")}
+                style={{backgroundColor:Colors.headerIcons, padding:5, borderRadius:199}}>
+                <MaterialIcons style={{color:Colors.placeholder}} name="map" size={26} />
+            </TouchableOpacity>
         </View>
     );
 }
@@ -81,6 +88,7 @@ const DynamicStyles = (Colors) => StyleSheet.create({
         color: Colors.text,
         backgroundColor: Colors.inputBG,
         padding: 10,
+        width:290,
         paddingLeft: (16+28),
         borderRadius: 12,
     },

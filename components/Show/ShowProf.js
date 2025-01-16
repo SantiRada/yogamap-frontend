@@ -4,6 +4,7 @@ import { StyleSheet, View, Pressable, ScrollView, Text, ToastAndroid } from 'rea
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import axios from 'axios';
+import useColors from '../../Colors';
 
 import { InfoProf } from '../InfoProf';
 import { PhotosProf } from '../PhotosProf';
@@ -22,6 +23,9 @@ export function ShowProf({ route }){
 
     const navigation = useNavigation();
 
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
+
     const [data, setData] = useState([]);
     const [forms, setForms] = useState(null);
     const [prices, setPrices] = useState(null);
@@ -32,7 +36,7 @@ export function ShowProf({ route }){
     useEffect(() => {
         const connectionProf = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/prof.php', { id }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/unique/prof.php', { id }, { headers: { 'Content-Type': 'application/json' } });
             
                 if (response.data.success) {
                     if(response.data.prof) { setData(response.data.prof[0]); }
@@ -45,7 +49,7 @@ export function ShowProf({ route }){
 
         const connectionPrices = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/prices.php', { id: id });
+                const response = await axios.post('https://yogamap.com.ar/public/select/prices.php', { id: id });
 
                 if (response.data.success) { setPrices(response.data.prices); }
                 else { console.log("Warning: ", response.data.message); }
@@ -54,7 +58,7 @@ export function ShowProf({ route }){
 
         const connectionForms = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/formacionesperprof.php', { id: id });
+                const response = await axios.post('https://yogamap.com.ar/public/select/formacionesperprof.php', { id: id });
 
                 if (response.data.success) { setForms(response.data.forms); }
                 else { console.log("Warning: ", response.data.message); }
@@ -63,7 +67,7 @@ export function ShowProf({ route }){
 
         const connectionEvents = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/eventFeed.php', { id: id });
+                const response = await axios.post('https://yogamap.com.ar/public/select/eventFeed.php', { id: id });
 
                 if (response.data.success) { setEvents(response.data.event); }
                 else { console.log("Warning: ", response.data.message); }
@@ -93,7 +97,7 @@ export function ShowProf({ route }){
         ToastAndroid.show('¡Solicitud enviada!', ToastAndroid.SHORT);
 
         try {
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/insert/notification.php',
+            const response = await axios.post('https://yogamap.com.ar/public/insert/notification.php',
                 { idProf: id, idUser: userID, title: title, description: description }
             );
         } catch (error) { console.log("ERROR: ", error); }
@@ -103,7 +107,7 @@ export function ShowProf({ route }){
         console.log("User: ", userID);
         console.log("Community: ", data);
         try {
-            const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/communityperuser.php',
+            const response = await axios.post('https://yogamap.com.ar/public/select/communityperuser.php',
                 { idUser: userID, idCom: data['community'] }
             );
 
@@ -133,7 +137,7 @@ export function ShowProf({ route }){
                 )
             }else{
                 try {
-                    const response = await axios.post('http://192.168.100.2/API_Yogamap/public/update/community.php',
+                    const response = await axios.post('https://yogamap.com.ar/public/update/community.php',
                         { idUser: userID, idCom: data['community'] }
                     );
         
@@ -147,9 +151,9 @@ export function ShowProf({ route }){
     useLayoutEffect(() => {
         navigation.setOptions({
             title: 'Detalles de Profe',
-            headerStyle: { backgroundColor: '#1A122E' },
-            headerTitleStyle: { color: '#E3D8FF' },
-            headerTintColor: '#E3D8FF',
+            headerStyle: { backgroundColor: Colors.background },
+            headerTitleStyle: { color:Colors.text2 },
+            headerTintColor:Colors.text2,
             headerRight: () => (
                 <View style={{ flexDirection: 'row', gap: 16, }}>
                     <MaterialIcons 
@@ -208,7 +212,7 @@ export function ShowProf({ route }){
                 <Text style={styles.title}>Ubicación</Text>
                 { data && data.ubication ?
                     <Text>UBICACIÓN RENDERIZANDO...</Text> :
-                    <Text style={{color: '#ffffff50'}}>Solo admite clases online</Text>
+                    <Text style={{color: Colors.ligthText}}>Solo admite clases online</Text>
                 }
             </View>
 
@@ -222,21 +226,21 @@ export function ShowProf({ route }){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         paddingTop: 16,
     },
     iconLeft: {
         marginRight: 8,
-        color: '#fff',
+        color: Colors.headerIcons,
     },
     iconRight: {
-        color: '#fff',
+        color: Colors.headerIcons,
     },
-    icon: { color: '#fff', },
+    icon: { color: Colors.headerIcons, },
     btn: {
         backgroundColor: '#8C5BFF',
         borderRadius: 16,
@@ -260,7 +264,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: '4%',
     },
     title: {
-        color: '#fff',
+        color: Colors.text,
         fontWeight: 'bold',
         fontSize: 18,
     },

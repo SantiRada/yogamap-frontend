@@ -1,19 +1,35 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, View, FlatList, Pressable, Text, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getProfID } from '../ProfData';
+import useColors from '../Colors';
+import { userData } from './../UserData';
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { apiAxios } from './../AxiosAPI';
 
-export function SliderEvent({ route }) {
+export function SliderEvent({ idUser, title }) {
 
-    const { idUser, title } = route.params;
     
     const idProf = getProfID() ?? null;
     const navigation = useNavigation();
+    const [dataUser, setDataUser] = useState()
+
+    const fetchData = async () => {
+         try {
+             const user = await userData();
+             console.log(user)
+             setDataUser(user);
+
+         } catch (error) {
+             console.error("Error fetching data", error);
+         }
+};
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const DATA = [
         {
@@ -25,6 +41,9 @@ export function SliderEvent({ route }) {
     ];
 
     const [data, setData] = useState(DATA);
+
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
 
     useFocusEffect(
         useCallback(() => {
@@ -45,6 +64,7 @@ export function SliderEvent({ route }) {
                     }
                 } catch (error) {
                     console.log("Falló la conexión al servidor al intentar recuperar los eventos...");
+                    console.log(error);
                 }
             };
         
@@ -52,10 +72,12 @@ export function SliderEvent({ route }) {
         }, [idProf]),
     );
 
-    const renderItem = ({ item }) => (
-        <Pressable onPress={ () => { item.id == 0 ? navigation.navigate('CreateEvent', { id: idProf }) : navigation.navigate('ShowEvent', {id: item.id, idProf: idProf, idUser: idUser}) } } style={styles.event}>
+    const RenderItem = ({ item }) => (
+        <Pressable key={item.id} onPress={ () => { item.id == 0 ? navigation.navigate('CreateEvent', { id: idProf }) : navigation.navigate('ShowEvent', {id: item.id, idProf: idProf, idUser: idUser}) } } style={styles.event}>
             <Image source={{ uri: "https://yogamap.com.ar/assets/events/" + item.image }} style={styles.eventImage} />
             <View style={styles.filter}></View>
+        {console.log(item)}
+
             <View style={styles.spaceText}>
                 <Text style={styles.eventTitle}>{item.title}</Text>
                 <Text style={styles.eventDesc}>{item.id == 0 ? item.description : item.themes}</Text>
@@ -72,27 +94,18 @@ export function SliderEvent({ route }) {
                 </View>
             }
             <View style={styles.listEvent}>
-                <FlatList
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id.toString()}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    snapToAlignment="center"
-                    snapToInterval={350}
-                    decelerationRate="fast"
-                />
+                {data.map((item) => (
+                    <RenderItem item={item}/>
+                ))}
             </View>
         </View>
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         gap: 8,
-        backgroundColor: '#1A122E',
-        width: '100%',
-        flex: 1,
+        backgroundColor: Colors.background,
     },
     titleContent: {
         flexDirection: 'row',
@@ -104,13 +117,13 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 18,
-        color: '#fff',
+        color: Colors.text,
         fontWeight: 'bold',
     },
     event: {
-        position: 'relative',
-        width: 350,
-        marginRight: 8,
+        marginBottom:20,
+        borderRadius:15,
+        overflow: 'hidden',
     },
     eventImage: {
         width: '100%',

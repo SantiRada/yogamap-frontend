@@ -22,11 +22,15 @@ function useColors () {
 
     const navBar = isDark ? "#3C2C61" : "#d3d2e6ff"
 
+    const modal = isDark ? "#3C2C61" : "#f6f6f6ff"
+
     const headerIcons = isDark ? "#E3D8FF" : "#8C5BFF"
 
     const homeCards = isDark ? "#3C2C61" : "#bdafdd3a"
 
     const text2 = isDark ? "#E3D8FF" : "black"
+
+    const myMessage = isDark ? "#5f4a8e" : "#bdafdd80"
 
     return Colors = {
         mainBlue,
@@ -41,6 +45,8 @@ function useColors () {
         homeCards,
         text2,
         superLigthText,
+        myMessage,
+        modal
       }
     }
 

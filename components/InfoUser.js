@@ -28,6 +28,7 @@ export function InfoUser({id}){
 
     const Colors = useColors()
     const styles = DynamicStyles(Colors)
+    
 
     return(
         <View style={ styles.stats }>

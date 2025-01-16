@@ -11,7 +11,7 @@ export function ListNotification({ type }) {
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/notification.php', { idUser, type }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/notification.php', { idUser, type }, { headers: { 'Content-Type': 'application/json' } });
                 if (response.data.success) { setData(response.data.notifications); }
                 else { console.log("Ha fallado el searching de Notificaciones: ", response.data.message); }
             } catch (error) {

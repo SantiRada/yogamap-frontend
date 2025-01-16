@@ -139,9 +139,12 @@ export function ShowCommunity({ route }) {
   }
 
   // RENDERIZADO ----------------------
-  const onSend = (newMessages = []) => {
-    if (newMessages.length > 0) {
-      const formattedMessages = newMessages.map((message) => ({
+  const onSend = (message) => {
+
+
+
+    if (message.text.length > 0) {
+      const formattedMessages = {
         _id: message._id || Math.random().toString(36).substring(7),
         iduser: idUser,
         name: userName,
@@ -151,13 +154,13 @@ export function ShowCommunity({ route }) {
           _id: idUser,
           name: userName
         }
-      }));
+      }
   
       setMessages((previousMessages) =>
         GiftedChat.append(previousMessages, formattedMessages)
       );
   
-      const messageToSave = newMessages[0].text;
+      const messageToSave = message.text;
       setText('');
       saveMessage(messageToSave);
     }
@@ -178,14 +181,12 @@ export function ShowCommunity({ route }) {
       </Pressable>
     );
   };
-  const renderInputToolbar = (props) => {
+  const RenderInputToolbar = (props) => {
     return (
       <View style={styles.sectionInput}>
-        { (data['type'] != 2 && data['type'] != 3) ?
-        <>
-          <TextInput
+        <TextInput
           style={styles.input}
-          onChangeText={(text) => setText(text)}
+          onChangeText={setText}
           placeholder="Escribe un mensaje"
           placeholderTextColor={Colors.placeholder}
           value={text}
@@ -199,13 +200,12 @@ export function ShowCommunity({ route }) {
             }
           }}
         >
-          <MaterialIcons name="send" size={24} color='#fff' />
+          <MaterialIcons name="send" size={24} color="#fff" />
         </TouchableOpacity>
-        </> : <Text style={styles.aclaration}>En esta comunidad solo pueden escribir los administradores.</Text>
-        }
       </View>
     );
   };
+  
 
   // INFORMACIÓN Y FUNCIONES DEL MODAL
   const [modalVisible, setModalVisible] = useState(false);
@@ -262,18 +262,26 @@ export function ShowCommunity({ route }) {
   }
   }
 
+  console.log(messages)
+
   return (
     <ScrollView style={styles.container}>
       { data ?
       <>
         <StatusBar barStyle="light" backgroundColor={Colors.background} />
-        <GiftedChat
-          messages={messages}
-          onSend={messages => onSend(messages)}
-          user={{ id: idUser }}
-          renderMessage={renderMessage}
-          renderInputToolbar={renderInputToolbar}
-        />
+        <View style={{height: 630,  justifyContent: 'space-between'}}>
+          <GiftedChat
+            messages={messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))}
+            onSend={(messages) => onSend(messages)}
+            user={{ _id: idUser }}
+            renderMessage={renderMessage}
+            renderInputToolbar={(props) => RenderInputToolbar({ ...props, onSend })}
+            placeholder="Escribe un mensaje..."
+          />
+
+        </View>
+
+
       </> : <ActivityIndicator size="large" color="#0c0715" /> }
 
         
@@ -300,7 +308,7 @@ export function ShowCommunity({ route }) {
             <View style={styles.sectionButtons}>
 
               <Pressable style={styles.option} onPress={ () => { copyToClipboard(modal['content']) } }>
-                <MaterialIcons name="content-copy" size={24} color='#fff' />
+                <MaterialIcons name="content-copy" size={24} color={Colors.text} />
                 <Text style={styles.optionText}>Copiar texto</Text>
               </Pressable>
 
@@ -354,7 +362,7 @@ const DynamicStyles = (Colors) => StyleSheet.create({
   message: {
     minWidth: 160,
     maxWidth: '80%',
-    backgroundColor: '#3C2C61',
+    backgroundColor: Colors.inputBG,
     paddingVertical: 6,
     paddingHorizontal: 8,
     borderRadius: 8,
@@ -362,15 +370,15 @@ const DynamicStyles = (Colors) => StyleSheet.create({
   },
   other: {
     alignSelf: 'flex-start',
-    backgroundColor: '#3C2C61',
+    backgroundColor: Colors.inputBG,
 
   },
   my: {
     alignSelf: 'flex-end',
-    backgroundColor: '#5f4a8e',
+    backgroundColor: Colors.myMessage,
   },
   messageName: {
-    color: '#5ff5e0aa',
+    color: '#5eb9ffaa',
     fontSize: 12,
     textAlign: 'left',
   },
@@ -383,7 +391,7 @@ const DynamicStyles = (Colors) => StyleSheet.create({
   messageTime: {
     alignSelf: 'flex-end',
     fontSize: 12,
-    color: '#ffffff50',
+    color: Colors.placeholder,
     marginTop: -8,
   },
   sectionInput: {
@@ -393,13 +401,13 @@ const DynamicStyles = (Colors) => StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: '#3C2C61',
+    backgroundColor: Colors.inputBG,
     paddingHorizontal: 16,
-    color: '#fff',
+    color: Colors.text,
     borderRadius: 16,
   },
   btn: {
-    backgroundColor: '#8C5BFF',
+    backgroundColor: Colors.headerIcons,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 16,
@@ -408,7 +416,7 @@ const DynamicStyles = (Colors) => StyleSheet.create({
     marginLeft: 8,
   },
   btnText: {
-    color: '#fff',
+    color: Colors.text,
     fontSize: 16,
   },
   overlay: {
@@ -416,7 +424,7 @@ const DynamicStyles = (Colors) => StyleSheet.create({
     justifyContent: 'flex-end',
   },
   bottomSheet: {
-    backgroundColor: '#281d46',
+    backgroundColor: Colors.modal,
     padding: 16,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
@@ -431,9 +439,9 @@ const DynamicStyles = (Colors) => StyleSheet.create({
     gap: 16,
     padding: 16,
     borderTopWidth: 1,
-    borderTopColor: '#ffffff20',
+    borderTopColor: Colors.ligthText
   },
-  optionText: { color: '#fff', },
+  optionText: { color: Colors.text, },
   aclaration: {
     width: '100%',
     textAlign: 'center',

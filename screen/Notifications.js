@@ -11,6 +11,9 @@ const Top = createMaterialTopTabNavigator();
 export function TopTab() {
     const [hasFormation, setHasFormation] = useState(false);
 
+    const Colors = useColors()
+    const styles = DynamicStyles(Colors)
+
     useEffect(() => {
         const connection = async () => {
             try {
@@ -69,6 +72,8 @@ export function Notifications() {
     }, []);
 
     if (isLoading) { return <ActivityIndicator size="large" color="#ffffff" />; }
+
+
 
     return (
         <View style={styles.container}>

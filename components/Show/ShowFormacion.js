@@ -3,6 +3,7 @@ import { StyleSheet, View, ScrollView, Image, Pressable, Text, Alert } from 'rea
 import { useNavigation } from '@react-navigation/native';
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import useColors from '../../Colors';
 
 import axios from 'axios';
 
@@ -12,6 +13,8 @@ import { getUserID } from './../../UserData';
 export function ShowFormacion({ route }){
     const { id, idProf } = route.params;
     const idUser = getUserID();
+    const Colors = useColors();
+    const styles = DynamicStyles(Colors);
 
     const navigation = useNavigation();
 
@@ -20,7 +23,7 @@ export function ShowFormacion({ route }){
     useEffect(() => {
         const connection = async () => {
             try {
-                const response = await axios.post('http://192.168.100.2/API_Yogamap/public/select/unique/Formaciones.php', { id }, { headers: { 'Content-Type': 'application/json' } });
+                const response = await axios.post('https://yogamap.com.ar/public/select/unique/Formaciones.php', { id }, { headers: { 'Content-Type': 'application/json' } });
             
                 if (response.data.success) {
                     if(response.data.formaciones) { setData(response.data.formaciones[0]); }
@@ -55,9 +58,11 @@ export function ShowFormacion({ route }){
         }
     }, [data, idProf, navigation]);
 
+    console.log(data)
+
     return(
         <ScrollView style={styles.container}>
-            <Image source={{ uri: "http://192.168.100.2/API_Yogamap/assets/formaciones/" + data.img }} style={styles.image} />
+            <Image source={{ uri: "https://yogamap.com.ar/assets/formaciones/" + data.img }} style={styles.image} />
             <View style={styles.content}>
                 <View style={styles.titleSector}>
                     <Text style={styles.title}>{data.title}</Text>
@@ -88,15 +93,15 @@ export function ShowFormacion({ route }){
     );
 }
 
-const styles = StyleSheet.create({
+const DynamicStyles = (Colors) => StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#1A122E',
+        backgroundColor: Colors.background,
         gap: 16,
     },
-    icon: { color: '#fff', },
-    iconRight: { color: '#fff', },
+    icon: { color: Colors.headerIcons, },
+    iconRight: { color: Colors.headerIcons, },
     image:{
         width: '100%',
         height: 220,
@@ -114,7 +119,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
-        color: '#fff',
+        color: Colors.text,
         fontSize: 24,
         fontWeight: 'bold',
     },
@@ -125,12 +130,12 @@ const styles = StyleSheet.create({
     chip: {
         paddingVertical: 8,
         paddingHorizontal: 12,
-        backgroundColor: '#3C2C61',
+        backgroundColor: Colors.inputBG,
         borderRadius: 8,
     },
-    chipText: { color: '#fff', },
+    chipText: { color: Colors.text, },
     description: {
-        color: '#fff',
+        color: Colors.text,
         opacity: 0.5,
         fontSize: 14,
         lineHeight: 20,
@@ -148,7 +153,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     subtitle:{
-        color: '#fff',
+        color: Colors.text,
         opacity: 0.65,
         fontWeight: 'bold',
         marginTop: 16,
